@@ -2,35 +2,46 @@
 
 # This script wraps the calls to docker compose run to fire up CLI commands within the backend container
 
+#BASH safe error handling
 set -euo pipefail
+
+# Entering project root directory
 readonly scriptDir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
-echo $scriptDir
-cd $scriptDir
+readonly projectRootDir=$(realpath $scriptDir/../)
+cd $projectRootDir
 
+# Getting argument
 readonly arg=${1:-"'not set'"}
-echo "matching command '$arg'"
 
-readonly composeRunBackend="docker-compose run -w /usr/src/app backend "
+function composeRunBackend(){
+    local runCmd="docker-compose run --rm backend "
+    set -x
+    $runCmd ${@}
+}
 
 case "$arg"} in
     i*)
         echo "Install"
-        $composeRunBackend yarn install
+        composeRunBackend yarn install
         ;;
     u*)
         echo "Update"
-        $composeRunBackend yarn
+        composeRunBackend yarn
         ;;
     m*)
-        echo "run DB migrations"
-        $composeRunBackend npx prisma migrate dev
+        echo "Run DB migrations"
+        composeRunBackend npx prisma migrate dev
         ;;
     g*)
-        echo "generate client"
-        $composeRunBackend npx prisma generate
+        echo "Generate client"
+        composeRunBackend npx prisma generate
+        ;;
+    s*)
+        echo "Running Prisma Studio"
+        composeRunBackend npx prisma studio --browser none
         ;;
     *)
-        echo "invalid command"
+        echo "Invalid Command"
         printf "\n\nInvalid command $arg\n\n" && exit 1
         ;;
 esac

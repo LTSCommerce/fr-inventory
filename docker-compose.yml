@@ -39,11 +39,14 @@ services:
     image: node:16
     links:
       - mysql
+    restart: unless-stopped
+    working_dir: /usr/src/app
     volumes:
       - ./backend:/usr/src/app
     # restart: always
     ports:
-      - 8080:8080
+      - 8080:8080 # actual service port
+      - 5555:5555 # prisma studio
 
 volumes:
   mysql-data:
