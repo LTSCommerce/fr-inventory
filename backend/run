@@ -10,14 +10,24 @@ cd $scriptDir
 readonly arg=${1:-"'not set'"}
 echo "matching command '$arg'"
 
+readonly composeRunBackend="docker-compose run -w /usr/src/app backend "
+
 case "$arg"} in
+    i*)
+        echo "Install"
+        $composeRunBackend yarn install
+        ;;
+    u*)
+        echo "Update"
+        $composeRunBackend yarn
+        ;;
     m*)
         echo "run DB migrations"
-        docker-compose run -w /usr/src/app backend npx prisma migrate dev
+        $composeRunBackend npx prisma migrate dev
         ;;
     g*)
         echo "generate client"
-        docker-compose run -w /usr/src/app backend npx prisma
+        $composeRunBackend npx prisma generate
         ;;
     *)
         echo "invalid command"
