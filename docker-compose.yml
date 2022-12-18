@@ -1,0 +1,49 @@
+version: '3.8'
+
+# See the .env file for ENV_* variable values
+
+services:
+  # MySQL DB Container
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=1
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_ROOT_PASS}
+      - MYSQL_DATABASE=fr_inventory
+      - MYSQL_USER=${ENV_MYSQL_USER}
+      - MYSQL_PASS=${ENV_MYSQL_PASS}
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  # PHPMyAdmin access to the MySQL DB
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      # Setting these enable auto login,
+      # however its flaky and also a security risk if this is accidentally made public
+      # PMA_USER: root
+      # PMA_PASS: ${ENV_MYSQL_ROOT_PASS}
+    restart: always
+    ports:
+      - 8081:80
+
+  backend:
+    image: node:16
+    links:
+      - mysql
+    volumes:
+      - ./backend:/usr/src/app
+    # restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  mysql-data:

@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// The archetype for an item. Describes the nature of the item
+model ItemType {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  hasExpiryDate Boolean @default(false)
+  // required = 1, required multiple=min, not required =0
+  minimum Int @default(1)
+  hasBattery Boolean @default(false)
+  items ResponderItem[]
+}
+
+// A responder is a person/group who responds to a callsign and owns items
+model Responder {
+  id Int @id @default(autoincrement())
+  name String
+  callsign String
+  items ResponderItem[]
+}
+
+// A responder item is one or more of specific ItemType held by a Responder
+model ResponderItem {
+  id Int @id @default(autoincrement())
+  itemType ItemType @relation(fields:[itemTypeId], references:[id])
+  itemTypeId Int
+  responder Responder @relation(fields:[responderId], references:[id])
+  responderId Int
+  expiry DateTime? // nullable expiry date
+  quantity Int @default(0)
+}

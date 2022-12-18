@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# This script wraps the calls to docker compose run to fire up CLI commands within the backend container
+
+set -euo pipefail
+readonly scriptDir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+echo $scriptDir
+cd $scriptDir
+
+readonly arg=${1:-"'not set'"}
+echo "matching command '$arg'"
+
+case "$arg"} in
+    m*)
+        echo "run DB migrations"
+        docker-compose run -w /usr/src/app backend npx prisma migrate dev
+        ;;
+    g*)
+        echo "generate client"
+        docker-compose run -w /usr/src/app backend npx prisma
+        ;;
+    *)
+        echo "invalid command"
+        printf "\n\nInvalid command $arg\n\n" && exit 1
+        ;;
+esac
