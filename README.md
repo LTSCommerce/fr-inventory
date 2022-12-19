@@ -1,3 +1,33 @@
+# README
+
+## QUICK START
+
+To install the project, run these commands:
+
+```bash
+// spin up the containers
+docker compose up -d
+
+// go into backend folder
+cd backend
+
+// install packages
+./run i
+
+// generate ORM client files
+./run g
+
+// create DB structure
+./run p
+
+// seed DB with data
+./run f
+```
+
+You can then access PHPMyAdmin on [http://localhost:8081] and you should see the database created and populated with seed data.
+
+
+
 # Docker
 
 Using Docker Compose to manage required services and build an environment
@@ -48,14 +78,9 @@ We're using [Prisma](https://www.prisma.io/) as the ORM
 
 To run prisma commands, we need to use `docker compose run`, the commands can get quite verbose and so we have a helper script [./backend/run](./backend/run)
 
-#### Create Migratoins and apply to the DB
-
-To create a migration file (used to update the DB structure) and to apply any migrations, use the m command
-
-```bash
-./backend/run m
-```
+View the contents of the [./backend/run](./backend/run) to see the available commands
 
 
 
 # Frontend
+TODO

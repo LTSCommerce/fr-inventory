@@ -10,7 +10,7 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_ROOT_PASS}
-      - MYSQL_DATABASE=fr_inventory
+      - MYSQL_DATABASE=${ENV_MYSQL_DB}
       - MYSQL_USER=${ENV_MYSQL_USER}
       - MYSQL_PASS=${ENV_MYSQL_PASS}
     ports:
