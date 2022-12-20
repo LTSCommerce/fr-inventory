@@ -6,53 +6,85 @@
 set -euo pipefail
 
 # Entering project root directory
-readonly backendRootDir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
-cd $backendRootDir
+readonly projectRootDir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+cd $projectRootDir
 
-# Getting argument
-readonly arg=${1:-"'not set'"}
+
 
 function composeRunBackend(){
-    local runCmd="docker-compose run --rm backend "
+    local runCmd="docker compose run --rm backend "
     set -x
     $runCmd ${@}
 }
 
-case "$arg"} in
-    i*)
+# Some new lines for readability
+echo
+echo
+
+# Getting argument
+readonly arg=${1:-"'not set'"}
+case "$arg" in
+    quickstart)
+        echo "Run all Quick Start Commands"
+        $0 up && $0 i && $0 g && $0 p && $0 ps
+        ;;
+    up)
+        echo "Start Docker Containers"
+        docker compose up -d
+        ;;
+    down)
+        echo "Stop Docker Containers"
+        docker compose down
+        ;;
+    destroy)
+        echo "Stop Docker Containers and Remove Data"
+        docker compose down -v
+        ;;
+    ps)
+        echo "List running Docker Containers"
+        docker compose ps
+        ;;
+    i)
         echo "Install all packages"
         composeRunBackend yarn install
         ;;
-    a*)
-        echo "Add package"
+    a)
+        echo "Add package(s) - follow the call with 1 or more package names to install"
         composeRunBackend yarn add ${@:2}
         ;;
-    u*)
+    u)
         echo "Update/Upgrade packages"
         composeRunBackend yarn upgrade
         ;;
-    p*)
+    p)
         echo "Force update DB to match Schema"
         composeRunBackend npx prisma db push
         ;;
-    m*)
+    m)
         echo "Create and Run DB Migrations"
         composeRunBackend npx prisma migrate dev
         ;;
-    g*)
+    g)
         echo "Generate client"
         composeRunBackend npx prisma generate
         ;;
-    f*)
+    f)
         echo "Fill DB with Seed Data"
         composeRunBackend npx prisma db seed
         ;;
-    s*)
-        echo "Running Prisma Studio (NOT WORKING)"
+    s)
+        echo "Run Prisma Studio (NOT WORKING)"
         composeRunBackend npx prisma studio --browser none --hostname '0.0.0.0'
         ;;
     *)
-        echo "Invalid Command"
-        printf "\n\nInvalid command $arg\n\n" && exit 1
+        echo "Help"
+        echo
+        echo "The $0 script has the following options"
+        echo
+        grep -Pzo '(?s)\s+?([a-z]+?)\)\s+?(?:echo ")[^"]+' "$0"  | sed -z 's/)\n        echo "/: /g' | column -s : -t
         ;;
 esac
+
+# Some new lines for readability
+echo
+echo

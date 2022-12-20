@@ -12,7 +12,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_ROOT_PASS?}
       - MYSQL_DATABASE=${ENV_MYSQL_DB?}
       - MYSQL_USER=${ENV_MYSQL_USER?}
-      - MYSQL_PASS=${ENV_MYSQL_PASS?}
+      - MYSQL_PASSWORD=${ENV_MYSQL_PASS?}
     ports:
       - '3306:3306'
     volumes:
@@ -39,10 +39,10 @@ services:
     image: node:16
     links:
       - mysql
-    restart: unless-stopped
+    #restart: unless-stopped
     working_dir: /usr/src/app
     volumes:
-      - ./backend:/usr/src/app
+      - ./:/usr/src/app
     # restart: always
     ports:
       - 8080:8080 # actual service port

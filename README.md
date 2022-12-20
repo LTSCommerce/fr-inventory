@@ -11,9 +11,6 @@ cp .env-dist .env
 // spin up the containers
 docker compose up -d
 
-// go into backend folder
-cd backend
-
 // install packages
 ./run i
 
@@ -49,6 +46,7 @@ To get it running, or to update the running version with the latest changes in t
 ```bash
 docker compose up -d
 ```
+(If you need to see debug info from the containers, run without the `-d` flag)
 
 ## Stop / Cleanup
 
