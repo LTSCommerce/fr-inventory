@@ -5,6 +5,9 @@
 To install the project, run these commands:
 
 ```bash
+// copy/edit env file
+cp .env-dist .env
+
 // spin up the containers
 docker compose up -d
 
@@ -76,9 +79,9 @@ The backend handles the CRUD to MySQL
 
 We're using [Prisma](https://www.prisma.io/) as the ORM 
 
-To run prisma commands, we need to use `docker compose run`, the commands can get quite verbose and so we have a helper script [./backend/run](./backend/run)
+To run prisma commands, we need to use `docker compose run`, the commands can get quite verbose and so we have a helper script [./backend/run](run)
 
-View the contents of the [./backend/run](./backend/run) to see the available commands
+View the contents of the [./backend/run](run) to see the available commands
 
 
 

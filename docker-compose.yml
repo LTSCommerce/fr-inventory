@@ -9,10 +9,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=1
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_ROOT_PASS}
-      - MYSQL_DATABASE=${ENV_MYSQL_DB}
-      - MYSQL_USER=${ENV_MYSQL_USER}
-      - MYSQL_PASS=${ENV_MYSQL_PASS}
+      - MYSQL_ROOT_PASSWORD=${ENV_MYSQL_ROOT_PASS?}
+      - MYSQL_DATABASE=${ENV_MYSQL_DB?}
+      - MYSQL_USER=${ENV_MYSQL_USER?}
+      - MYSQL_PASS=${ENV_MYSQL_PASS?}
     ports:
       - '3306:3306'
     volumes:
@@ -30,7 +30,7 @@ services:
       # Setting these enable auto login,
       # however its flaky and also a security risk if this is accidentally made public
       # PMA_USER: root
-      # PMA_PASS: ${ENV_MYSQL_ROOT_PASS}
+      # PMA_PASS: ${ENV_MYSQL_ROOT_PASS?}
     restart: always
     ports:
       - 8081:80
