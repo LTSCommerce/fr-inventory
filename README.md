@@ -8,20 +8,7 @@ To install the project, run these commands:
 // copy/edit env file
 cp .env-dist .env
 
-// spin up the containers
-docker compose up -d
-
-// install packages
-./run i
-
-// generate ORM client files
-./run g
-
-// create DB structure
-./run p
-
-// seed DB with data
-./run f
+// 
 ```
 
 You can then access PHPMyAdmin on [http://localhost:8081] and you should see the database created and populated with seed data.

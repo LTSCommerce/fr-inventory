@@ -15,6 +15,7 @@ function composeRunBackend(){
     local runCmd="docker compose run --rm backend "
     set -x
     $runCmd ${@}
+    set +x
 }
 
 # Some new lines for readability
@@ -26,7 +27,12 @@ readonly arg=${1:-"'not set'"}
 case "$arg" in
     quickstart)
         echo "Run all Quick Start Commands"
-        $0 up && $0 i && $0 g && $0 p && $0 ps
+        if [[ ! -f .env ]]; then
+          cp .env-dist .env;
+        fi
+        $0 up && $0 i && $0 g && $0 p && $0 f
+        echo "System full installed and database seeded"
+        $0 ps
         ;;
     up)
         echo "Start Docker Containers"
@@ -41,7 +47,7 @@ case "$arg" in
         docker compose down -v
         ;;
     ps)
-        echo "List running Docker Containers"
+        echo "List of running Docker Containers"
         docker compose ps
         ;;
     i)
@@ -58,23 +64,23 @@ case "$arg" in
         ;;
     p)
         echo "Force update DB to match Schema"
-        composeRunBackend npx prisma db push
+        composeRunBackend yarn prisma db push
         ;;
     m)
         echo "Create and Run DB Migrations"
-        composeRunBackend npx prisma migrate dev
+        composeRunBackend yarn prisma migrate dev
         ;;
     g)
         echo "Generate client"
-        composeRunBackend npx prisma generate
+        composeRunBackend yarn prisma generate
         ;;
     f)
         echo "Fill DB with Seed Data"
-        composeRunBackend npx prisma db seed
+        composeRunBackend yarn prisma db seed
         ;;
     s)
         echo "Run Prisma Studio (NOT WORKING)"
-        composeRunBackend npx prisma studio --browser none --hostname '0.0.0.0'
+        composeRunBackend yarn prisma studio --browser none --hostname '0.0.0.0'
         ;;
     *)
         echo "Help"

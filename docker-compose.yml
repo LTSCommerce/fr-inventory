@@ -41,6 +41,8 @@ services:
       - mysql
     #restart: unless-stopped
     working_dir: /usr/src/app
+    environment:
+      - NO_UPDATE_NOTIFIER=true
     volumes:
       - ./:/usr/src/app
     # restart: always
