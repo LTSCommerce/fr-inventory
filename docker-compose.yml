@@ -35,20 +35,20 @@ services:
     ports:
       - 8081:80
 
-  backend:
+  # This container is not running by default, but it is used to run commands and adhoc servers.
+  # NOTE - port mapping configs do not have any effect when running docker compose run
+  runner:
     image: node:16
     links:
       - mysql
     #restart: unless-stopped
     working_dir: /usr/src/app
-    environment:
-      - NO_UPDATE_NOTIFIER=true
     volumes:
       - ./:/usr/src/app
-    # restart: always
-    ports:
-      - 8080:8080 # actual service port
-      - 5555:5555 # prisma studio
+    # Port mapping config has no effect when using docker compose run
+#     ports:
+#       - 5555:5555 # prisma studio
+#       - 3000:3000 # next dev
 
 volumes:
   mysql-data:

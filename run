@@ -7,12 +7,12 @@ set -euo pipefail
 
 # Entering project root directory
 readonly projectRootDir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
-cd $projectRootDir
+cd "$projectRootDir"
 
-
+readonly runnerContainerName="runner"
 
 function composeRunBackend(){
-    local runCmd="docker compose run --rm backend "
+    local runCmd="docker compose run --rm $runnerContainerName "
     set -x
     $runCmd ${@}
     set +x
@@ -30,7 +30,11 @@ case "$arg" in
         if [[ ! -f .env ]]; then
           cp .env-dist .env;
         fi
-        $0 up && $0 i && $0 g && $0 p && $0 f
+        $0 up \
+          && $0 install \
+          && $0 generate \
+          && $0 db-push \
+          && $0 db-fill
         echo "System full installed and database seeded"
         $0 ps
         ;;
@@ -44,50 +48,50 @@ case "$arg" in
         ;;
     destroy)
         echo "Stop Docker Containers and Remove Data"
-        docker compose down -v
+        docker compose down -v --remove-orphans
         ;;
     ps)
         echo "List of running Docker Containers"
         docker compose ps
         ;;
-    i)
+    i|install)
         echo "Install all packages"
         composeRunBackend yarn install
         ;;
-    a)
-        echo "Add package(s) - follow the call with 1 or more package names to install"
-        composeRunBackend yarn add ${@:2}
-        ;;
-    u)
-        echo "Update/Upgrade packages"
-        composeRunBackend yarn upgrade
-        ;;
-    p)
+    p|db-push)
         echo "Force update DB to match Schema"
         composeRunBackend yarn prisma db push
         ;;
-    m)
+    m|db-migrate)
         echo "Create and Run DB Migrations"
         composeRunBackend yarn prisma migrate dev
         ;;
-    g)
+    g|generate)
         echo "Generate client"
         composeRunBackend yarn prisma generate
         ;;
-    f)
+    f|db-fill)
         echo "Fill DB with Seed Data"
         composeRunBackend yarn prisma db seed
         ;;
-    s)
-        echo "Run Prisma Studio (NOT WORKING)"
-        composeRunBackend yarn prisma studio --browser none --hostname '0.0.0.0'
+    studio)
+        echo "Run Prisma Studio"
+        docker compose run --rm -p 5555:5555 $runnerContainerName yarn prisma studio --browser none --hostname 0.0.0.0
+        ;;
+    yarn)
+        echo "Run Yarn Command"
+        composeRunBackend yarn ${@:2}
+        ;;
+    dev)
+        echo "Run Dev Server for local development"
+        docker compose run --rm -p 3000:3000 $runnerContainerName yarn dev
         ;;
     *)
         echo "Help"
         echo
         echo "The $0 script has the following options"
         echo
-        grep -Pzo '(?s)\s+?([a-z]+?)\)\s+?(?:echo ")[^"]+' "$0"  | sed -z 's/)\n        echo "/: /g' | column -s : -t
+        grep -Pzo '(?s)\s+?([a-z|]+?)\)\s+?(?:echo ")[^"]+' "$0"  | sed -z 's/)\n        echo "/: /g' | column -s : -t
         ;;
 esac
 
