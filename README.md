@@ -2,13 +2,10 @@
 
 ## QUICK START
 
-To install the project, run these commands:
+To install the project, run this command:
 
 ```bash
-// copy/edit env file
-cp .env-dist .env
-
-// 
+./run quickstart
 ```
 
 You can then access PHPMyAdmin on [http://localhost:8081] and you should see the database created and populated with seed data.
