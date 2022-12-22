@@ -13,11 +13,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "types": ["@types/jest", "@quramy/jest-prisma"]
   },
-  "include": [
-    "next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": [
-    "next/node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["next/node_modules"]
 }

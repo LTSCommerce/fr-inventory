@@ -3,5 +3,9 @@
 
 # Lint and Fix files. 
 # Run with TTY disabled to allow this to work as a git hook
+
+# Throws a git error, only happens in the context of the git hook. Not sure why
 #DISABLE_RUN_TTY=1 ./run yarn lint-staged --concurrent false
+
+# This will lint everything, not a massive deal for a smaller project
 DISABLE_RUN_TTY=1 ./run yarn lint --fix

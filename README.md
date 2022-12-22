@@ -44,6 +44,8 @@ There are some preconfigured recommended extensions
 
 To install these, open the command pallete (`[Ctrl]`+`[Shift]`+`[p]`) and then type "show recommended extensions" and you will be given an easy view to install them
 
+Some are more essential than others, but they are all good
+
 ## Settings and Loader
 
 There are pre defined configurations for vscode that will do things like automatically format on save. We also have a predefined debug runner which will allow you to debug code that is running inside the container. You can see all these files in the [.vscode](.vscode) folder.
@@ -175,6 +177,14 @@ DB Fill will populate the database with data as defined in the [./prisma/seed.ts
 ./run db-fill
 ```
 
+## Testing Prisma
+
+We're using https://www.npmjs.com/package/@quramy/jest-prisma
+
+This gives us an easy way to do proper integration tests that really interact with the database so we get a lot more certainity that things really work.
+
+Each test is wrapped in a transaction, and that transaction is then rolled back. This means that tests don't actually pollute the database and makes testing a lot easier.
+
 # Frontend
 
 TODO
@@ -183,10 +193,32 @@ TODO
 
 # Links/Docs/Resource
 
+## Linting etc automatically
+
 - https://paulintrognon.fr/blog/typescript-prettier-eslint-next-js
+
+## NextJS Docs
+
 - https://nextjs.org/docs/getting-started
 - https://nextjs.org/docs/testing#jest-and-react-testing-library
+
+## MUI component library
+
 - https://mui.com/material-ui/getting-started/overview/
 - https://mui.com/x/introduction/
+
+## Prisma ORM
+
 - https://www.prisma.io/nextjs
 - https://www.prisma.io/docs
+
+## Testing
+
+- https://jestjs.io/docs/using-matchers
+
+# Transactions for Tests
+
+- https://selimb.hashnode.dev/speedy-prisma-pg-tests
+- https://github.com/prisma/prisma/issues/12458
+- https://github.com/chax-at/transactional-prisma-testing
+- https://www.npmjs.com/package/@quramy/jest-prisma?activeTab=readme

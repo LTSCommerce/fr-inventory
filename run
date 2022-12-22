@@ -42,6 +42,15 @@ function composeRunBackendWithPort(){
     set +x
 }
 
+function numberOfCpuCores(){
+    getconf _NPROCESSORS_ONLN
+}
+
+function numberOfWorkers(){
+    local divideCoresBy="${1:-2}"
+    echo $(($(numberOfCpuCores)/divideCoresBy))
+}
+
 # Some new lines for readability
 echo
 echo
@@ -93,8 +102,7 @@ case "$arg" in
         ;;
     i|install)
         echo "Install all packages, set up Husky"
-        composeRunBackend yarn --cache-folder .next/cache/yarn install \
-            && composeRunBackend yarn husky install
+        composeRunBackend yarn --cache-folder .next/cache/yarn install
         ;;
     p|db-push)
         echo "Force update DB to match Schema"
@@ -126,15 +134,19 @@ case "$arg" in
         ;;
     t|test)
         echo "Run Jest Tests"
-        composeRunBackend yarn jest
+        composeRunBackend yarn jest --max-workers $(numberOfWorkers)
         ;;
     tw|testw)
         echo "Run Jest Tests Automatically on File Update"
-        composeRunBackend yarn jest --watch
-        ;;    
+        composeRunBackend yarn jest --watch --max-workers $(numberOfWorkers)
+        ;;
+    td|testd)
+        echo "Debug Jest Tests"
+        composeRunBackendWithPort 9229 node --inspect-brk=0.0.0.0:9229 ./node_modules/.bin/jest --runInBand --colors --verbose
+        ;;        
     nd|node-debug)
         echo "Run node command (with debug)"
-        composeRunBackendWithPort 9229 node --inspect-brk=0.0.0.0:9229 ${@:2}
+        composeRunBackendWithPort 9229 node --inspect-brk=0.0.0.0:9229 ${@:2} 
         ;;
     n|node)
         echo "Run node command"

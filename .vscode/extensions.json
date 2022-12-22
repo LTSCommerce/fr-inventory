@@ -1,8 +1,10 @@
 {
-    "recommendations": [
-        "Prisma.prisma",
-        "dbaeumer.vscode-eslint",
-        "ms-azuretools.vscode-docker",
-        "esbenp.prettier-vscode"
-    ]
+  "recommendations": [
+    "Prisma.prisma",
+    "dbaeumer.vscode-eslint",
+    "ms-azuretools.vscode-docker",
+    "esbenp.prettier-vscode",
+    "rokoroku.vscode-theme-darcula",
+    "hardikmodha.create-tests"
+  ]
 }
