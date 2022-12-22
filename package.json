@@ -41,9 +41,9 @@
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
-  "husky":{
-    "hooks":{
-      "pre-commit":"./run yarn next lint"
+  "husky": {
+    "hooks": {
+      "precommit": "./run yarn next lint"
     }
   },
   "license": "MIT"
