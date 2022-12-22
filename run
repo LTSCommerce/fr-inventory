@@ -15,11 +15,10 @@ readonly thisScriptName="$0"
 # The name of the container to run things, this needs to be configured in docker-compose.yml
 readonly runnerContainerName="runner"
 
-# TTY is disabled by default, generally its not needed
+# TTY is enabled by default as it gives a nicer experience
+# However for some applications, (eg git hooks) the TTY needs to be disabled
 # To disable TTY, export DISABLE_RUN_TTY=1 before calling run
-# Also of course this can be overridden as required for specific run commands
 # eg DISABLE_RUN_TTY=1 ./run yarn next lint
-# Read more about this: https://stackoverflow.com/a/40026942
 readonly disableTty="$([[ "${DISABLE_RUN_TTY:-0}" == "1" ]] && echo '--no-TTY' || echo '')"
 
 # This function will take an unlimited number of command arguments 
@@ -46,6 +45,15 @@ function composeRunBackendWithPort(){
 # Some new lines for readability
 echo
 echo
+
+# Copying Git User Config to Local
+# Will not overwrite config already set
+# This is required so that any git commands running inside containers have the correct user config
+if [[ -d .git ]]; then
+    git config --local --get user.name > /dev/null || git config --local --add user.name "$(git config --global --get user.name)"
+    git config --local --get user.email  > /dev/null || git config --local --add user.email "$(git config --global --get user.email)"
+fi
+
 
 # Getting argument
 readonly arg=${1:-"'not set'"}

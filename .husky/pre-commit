@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-DISABLE_RUN_TTY=1 ./run yarn next lint
+# Lint and Fix files. 
+# Run with TTY disabled to allow this to work as a git hook
+#DISABLE_RUN_TTY=1 ./run yarn lint-staged --concurrent false
+DISABLE_RUN_TTY=1 ./run yarn lint --fix
