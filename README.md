@@ -44,6 +44,28 @@ There are some preconfigured recommended extensions
 
 To install these, open the command pallete (`[Ctrl]`+`[Shift]`+`[p]`) and then type "show recommended extensions" and you will be given an easy view to install them
 
+## Settings and Loader
+
+There are pre defined configurations for vscode that will do things like automatically format on save. We also have a predefined debug runner which will allow you to debug code that is running inside the container. You can see all these files in the [.vscode](.vscode) folder.
+
+### [.vscode/settings.json](.vscode/settings.json)
+
+The settings file contains specific settings that are required for this project.
+
+You can read more about this in the [vscode docs](https://code.visualstudio.com/docs/getstarted/settings#_settingsjson)
+
+### [.vscode/launch.json](.vscode/launch.json)
+
+The launch file contains specific configs for debug running. The configuration has everything required to debug nodejs inside the container.
+
+To debug something, you should use the command
+
+```bash
+./run node-debug path/to/script/or/args
+```
+
+This will run the node script and will break on the first line. Once that is running and paused at the first line, you can then connect to that debugger via the VSCode debugger and commence normal debugging.
+
 ---
 
 # Next
@@ -55,7 +77,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
-yarn dev
+./run yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -125,17 +147,33 @@ To totally destroy containers and all data including DB etc
 docker compose down -v
 ```
 
-# Backend
+---
 
-The backend handles the CRUD to MySQL
-
-### ORM - Prisma
+# ORM - Prisma
 
 We're using [Prisma](https://www.prisma.io/) as the ORM
 
-To run prisma commands, we need to use `docker compose run`, the commands can get quite verbose and so we have a helper script [./run](run)
+There are a few run commands to help manage the database
 
-View the contents of the [./run](run) to see the available commands
+DB Push will force push the current model structure into to the database. It will not create migrations and it may destroy data if columns are removed. Whilst developing the MVP this is fine, there should not be any important data in the DB.
+
+Generate will create the required client library files for our code to work with the ORM and access the database. This is required as a first step
+
+```bash
+ ./run generate
+```
+
+DB Push will force push the current model structure into to the database. It will not create migrations and it may destroy data if columns are removed. Whilst developing the MVP this is fine, there should not be any important data in the DB.
+
+```bash
+./run db-push
+```
+
+DB Fill will populate the database with data as defined in the [./prisma/seed.ts](./prisma/seed.ts) script
+
+```bash
+./run db-fill
+```
 
 # Frontend
 
