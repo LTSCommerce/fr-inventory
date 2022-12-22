@@ -21,7 +21,7 @@ function composeRunBackend(){
     local runCmd="docker compose run --rm $runnerContainerName "
     local commandsInsideContainer=${@}
     set -x
-    $runCmd $commandsInsideContainer
+    $runCmd bash -c "$commandsInsideContainer"
     set +x
 }
 
@@ -32,7 +32,7 @@ function composeRunBackendWithPort(){
     local runCmd="docker compose run -p $port:$port --rm $runnerContainerName "
     local commandsInsideContainer=${@:2}
     set -x
-    $runCmd $commandsInsideContainer
+    $runCmd bash -c "$commandsInsideContainer"
     set +x
 }
 
@@ -113,9 +113,13 @@ case "$arg" in
         echo "Run Jest Tests Automatically on File Update"
         composeRunBackend yarn jest --watch
         ;;    
-    node)
+    nd|node-debug)
         echo "Run node command (with debug)"
         composeRunBackendWithPort 9229 node --inspect-brk=0.0.0.0:9229 ${@:2}
+        ;;
+    n|node)
+        echo "Run node command"
+        composeRunBackend ${@:2}
         ;;
     *)
         echo "Help"
