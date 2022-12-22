@@ -102,7 +102,7 @@ case "$arg" in
         ;;
     i|install)
         echo "Install all packages, set up Husky"
-        composeRunBackend yarn --cache-folder .next/cache/yarn install
+        composeRunBackend yarn --cache-folder .next/cache/yarn
         ;;
     p|db-push)
         echo "Force update DB to match Schema"
@@ -150,7 +150,7 @@ case "$arg" in
         ;;
     n|node)
         echo "Run node command"
-        composeRunBackend ${@:2}
+        composeRunBackend node ${@:2}
         ;;
     *)
         echo "Help"
