@@ -13,6 +13,13 @@ also create and pre seed the database with data.
 
 You can then access PHPMyAdmin on [http://localhost:8081] and you should see the database created and populated with seed data.
 
+## ./run Script
+
+Everything is being done in containers.
+
+To make this easier, commands have been coded into the [./run](./run) script. If you run it without arguments you can see the help
+
+
 ### Run Development Server
 To get the system running in development mode, use this command:
 
@@ -114,9 +121,11 @@ The backend handles the CRUD to MySQL
 
 We're using [Prisma](https://www.prisma.io/) as the ORM 
 
-To run prisma commands, we need to use `docker compose run`, the commands can get quite verbose and so we have a helper script [./backend/run](run)
+To run prisma commands, we need to use `docker compose run`, the commands can get quite verbose and so we have a helper script [./run](run)
 
-View the contents of the [./backend/run](run) to see the available commands
+View the contents of the [./run](run) to see the available commands
+
+
 
 
 

@@ -56,7 +56,7 @@ case "$arg" in
         ;;
     i|install)
         echo "Install all packages"
-        composeRunBackend yarn install
+        composeRunBackend yarn --cache-folder var/cache/yarn install
         ;;
     p|db-push)
         echo "Force update DB to match Schema"
@@ -80,12 +80,20 @@ case "$arg" in
         ;;
     yarn)
         echo "Run Yarn Command"
-        composeRunBackend yarn ${@:2}
+        composeRunBackend yarn --cache-folder var/cache/yarn ${@:2}
         ;;
-    dev)
+    d|dev)
         echo "Run Dev Server for local development"
         docker compose run --rm -p 3000:3000 $runnerContainerName yarn dev
         ;;
+    t|test)
+        echo "Run Jest Tests"
+        composeRunBackend yarn jest
+        ;;
+    tw|testw)
+        echo "Run Jest Tests Automatically on File Update"
+        composeRunBackend yarn jest --watch
+        ;;    
     *)
         echo "Help"
         echo

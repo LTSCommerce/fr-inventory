@@ -1,6 +1,7 @@
 .history
 /.env
 
+
 ## NEXT JS Default Ignores
 # dependencies
 /node_modules
