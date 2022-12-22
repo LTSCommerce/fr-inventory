@@ -3,13 +3,6 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import Box from '@mui/material/Box';
 import { DataGrid, GridColumns } from '@mui/x-data-grid';
-// import {
-//     PrismaClient,
-//     // Prisma,
-//     Responder,
-//     // ItemType,
-//     // ResponderItem,
-// } from "@prisma/client";
 import getResponderList from '../backend/services/responder/getResponderList';
 import { InferGetStaticPropsType } from 'next'
 
@@ -49,7 +42,7 @@ const columns: GridColumns = [
 ];
 
 export const getStaticProps = async () => {
-    const data = getResponderList()
+    const data = await getResponderList()
     const dataClean = JSON.parse(JSON.stringify(data));
     return {
         props: {
@@ -68,6 +61,7 @@ export default function Home({ data }: InferGetStaticPropsType<typeof getStaticP
                 {/*<link rel="icon" href="/favicon.ico" />*/}
             </Head>
             <main className={styles.main}>
+                <h1>Responders</h1>
                 <Box sx={{ height: 400, width: '100%' }}>
                     <DataGrid
                         rows={data}

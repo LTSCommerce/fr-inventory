@@ -1,5 +1,8 @@
 {
     "recommendations": [
-        "Prisma.prisma"
+        "Prisma.prisma",
+        "dbaeumer.vscode-eslint",
+        "ms-azuretools.vscode-docker",
+        "esbenp.prettier-vscode"
     ]
 }

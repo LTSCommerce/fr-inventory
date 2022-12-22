@@ -55,8 +55,9 @@ case "$arg" in
         docker compose ps
         ;;
     i|install)
-        echo "Install all packages"
-        composeRunBackend yarn --cache-folder var/cache/yarn install
+        echo "Install all packages, set up Husky"
+        composeRunBackend yarn --cache-folder .next/cache/yarn install \
+            && composeRunBackend yarn husky install
         ;;
     p|db-push)
         echo "Force update DB to match Schema"
@@ -80,7 +81,7 @@ case "$arg" in
         ;;
     yarn)
         echo "Run Yarn Command"
-        composeRunBackend yarn --cache-folder var/cache/yarn ${@:2}
+        composeRunBackend yarn --cache-folder .next/cache/yarn ${@:2}
         ;;
     d|dev)
         echo "Run Dev Server for local development"

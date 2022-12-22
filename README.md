@@ -35,6 +35,18 @@ real time.
 
 ---
 
+# VSCode
+
+This project is optimised to work with vscode.
+
+## Recommended Extensions
+
+There are some preconfigured recommended extensions
+
+To install these, open the command pallete (`[Ctrl]`+`[Shift]`+`[p]`) and then type "show recommended extensions" and you will be given an easy view to install them
+
+---
+
 
 # Next 
 
@@ -131,3 +143,14 @@ View the contents of the [./run](run) to see the available commands
 
 # Frontend
 TODO
+
+---
+
+# Links/Docs/Resource
+
+- https://paulintrognon.fr/blog/typescript-prettier-eslint-next-js
+- https://nextjs.org/docs/testing#jest-and-react-testing-library
+- https://mui.com/material-ui/getting-started/overview/
+- https://mui.com/x/introduction/
+- https://www.prisma.io/nextjs
+- https://www.prisma.io/docs
