@@ -8,7 +8,7 @@ To install the project, clone this repo, then enter the root directory and run t
 ./run quickstart
 ```
 
-This will run a sequence of commands to build the docker containers and install and generate required code. It will 
+This will run a sequence of commands to build the docker containers and install and generate required code. It will
 also create and pre seed the database with data.
 
 You can then access PHPMyAdmin on [http://localhost:8081] and you should see the database created and populated with seed data.
@@ -19,8 +19,8 @@ Everything is being done in containers.
 
 To make this easier, commands have been coded into the [./run](./run) script. If you run it without arguments you can see the help
 
-
 ### Run Development Server
+
 To get the system running in development mode, use this command:
 
 ```bash
@@ -29,9 +29,8 @@ To get the system running in development mode, use this command:
 
 This will then spin up a hot reloading dev server. You can access the front end on [http://localhost:3000].
 
-As you make changes and save them, the page will automatically update so you can see your changes in pretty close to 
+As you make changes and save them, the page will automatically update so you can see your changes in pretty close to
 real time.
-
 
 ---
 
@@ -47,8 +46,7 @@ To install these, open the command pallete (`[Ctrl]`+`[Shift]`+`[p]`) and then t
 
 ---
 
-
-# Next 
+# Next
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -83,12 +81,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-
 # Docker
 
 Using Docker Compose to manage required services and build an environment
 
 ## Variables
+
 Things like usernames and passwords are managed in the .env file. This file is not tracked by Git, however there is a copy called .env-dist. You should copy this file to .env
 
 ```bash
@@ -102,17 +100,19 @@ To get it running, or to update the running version with the latest changes in t
 ```bash
 docker compose up -d
 ```
+
 (If you need to see debug info from the containers, run without the `-d` flag)
 
 ## Stop / Cleanup
 
-To stop the running containers but not destroy anyting, run 
+To stop the running containers but not destroy anyting, run
 
 ```bash
 docker compose stop
 ```
 
 To stop and remove containers
+
 ```bash
 docker compose down
 ```
@@ -131,17 +131,14 @@ The backend handles the CRUD to MySQL
 
 ### ORM - Prisma
 
-We're using [Prisma](https://www.prisma.io/) as the ORM 
+We're using [Prisma](https://www.prisma.io/) as the ORM
 
 To run prisma commands, we need to use `docker compose run`, the commands can get quite verbose and so we have a helper script [./run](run)
 
 View the contents of the [./run](run) to see the available commands
 
-
-
-
-
 # Frontend
+
 TODO
 
 ---
@@ -149,6 +146,7 @@ TODO
 # Links/Docs/Resource
 
 - https://paulintrognon.fr/blog/typescript-prettier-eslint-next-js
+- https://nextjs.org/docs/getting-started
 - https://nextjs.org/docs/testing#jest-and-react-testing-library
 - https://mui.com/material-ui/getting-started/overview/
 - https://mui.com/x/introduction/

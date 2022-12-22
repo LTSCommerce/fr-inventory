@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This script wraps the calls to docker compose run to fire up CLI commands within the backend container
+# This script wraps the calls to docker compose run to fire up CLI commands within the runner container
 
 # BASH safe error handling
 set -euo pipefail
@@ -9,12 +9,30 @@ set -euo pipefail
 readonly projectRootDir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 cd "$projectRootDir"
 
+# Clearer variable name for the current script
+readonly thisScriptName="$0"
+
+# The name of the container to run things, this needs to be configured in docker-compose.yml
 readonly runnerContainerName="runner"
 
+# This function will take an unlimited number of command arguments 
+# and run them inside the runner container
 function composeRunBackend(){
     local runCmd="docker compose run --rm $runnerContainerName "
+    local commandsInsideContainer=${@}
     set -x
-    $runCmd ${@}
+    $runCmd $commandsInsideContainer
+    set +x
+}
+
+# This function will take a port number and an unlimited number of command arguments 
+# and run them inside the runner container, with the port mapped
+function composeRunBackendWithPort(){
+    local port=$1
+    local runCmd="docker compose run -p $port:$port --rm $runnerContainerName "
+    local commandsInsideContainer=${@:2}
+    set -x
+    $runCmd $commandsInsideContainer
     set +x
 }
 
@@ -30,13 +48,13 @@ case "$arg" in
         if [[ ! -f .env ]]; then
           cp .env-dist .env;
         fi
-        $0 up \
-          && $0 install \
-          && $0 generate \
-          && $0 db-push \
-          && $0 db-fill
+        $thisScriptName up \
+          && $thisScriptName install \
+          && $thisScriptName generate \
+          && $thisScriptName db-push \
+          && $thisScriptName db-fill
         echo "System full installed and database seeded"
-        $0 ps
+        $thisScriptName ps
         ;;
     up)
         echo "Start Docker Containers"
@@ -77,7 +95,7 @@ case "$arg" in
         ;;
     studio)
         echo "Run Prisma Studio"
-        docker compose run --rm -p 5555:5555 $runnerContainerName yarn prisma studio --browser none --hostname 0.0.0.0
+        composeRunBackendWithPort 5555 yarn prisma studio --browser none --hostname 0.0.0.0
         ;;
     yarn)
         echo "Run Yarn Command"
@@ -85,7 +103,7 @@ case "$arg" in
         ;;
     d|dev)
         echo "Run Dev Server for local development"
-        docker compose run --rm -p 3000:3000 $runnerContainerName yarn dev
+        composeRunBackendWithPort 3000 yarn dev
         ;;
     t|test)
         echo "Run Jest Tests"
@@ -95,12 +113,16 @@ case "$arg" in
         echo "Run Jest Tests Automatically on File Update"
         composeRunBackend yarn jest --watch
         ;;    
+    node)
+        echo "Run node command (with debug)"
+        composeRunBackendWithPort 9229 node --inspect-brk=0.0.0.0:9229 ${@:2}
+        ;;
     *)
         echo "Help"
         echo
-        echo "The $0 script has the following options"
+        echo "The $thisScriptName script has the following options"
         echo
-        grep -Pzo '(?s)\s+?([a-z|]+?)\)\s+?(?:echo ")[^"]+' "$0"  | sed -z 's/)\n        echo "/: /g' | column -s : -t
+        grep -Pzo '(?s)\s+?([a-z|]+?)\)\s+?(?:echo ")[^"]+' "$thisScriptName"  | sed -z 's/)\n        echo "/: /g' | column -s : -t
         ;;
 esac
 
