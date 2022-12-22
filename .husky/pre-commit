@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+DISABLE_RUN_TTY=1 ./run yarn next lint

@@ -2,8 +2,8 @@
 
 # This script wraps the calls to docker compose run to fire up CLI commands within the runner container
 
-# BASH safe error handling
-set -euo pipefail
+# Safe error handling
+set -Eeuo pipefail
 
 # Entering project root directory
 readonly projectRootDir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
@@ -15,10 +15,17 @@ readonly thisScriptName="$0"
 # The name of the container to run things, this needs to be configured in docker-compose.yml
 readonly runnerContainerName="runner"
 
+# TTY is disabled by default, generally its not needed
+# To enable TTY, export DISABLE_RUN_TTY=0 before calling run
+# Also of course this can be overridden as required for specific run commands
+# eg DISABLE_RUN_TTY=0 ./run yarn next lint
+# Read more about this: https://stackoverflow.com/a/40026942
+readonly disableTty="$([[ "${DISABLE_RUN_TTY:-0}" == "0" ]] && echo '--no-tty' || echo '')"
+
 # This function will take an unlimited number of command arguments 
 # and run them inside the runner container
 function composeRunBackend(){
-    local runCmd="docker compose run --rm $runnerContainerName "
+    local runCmd="docker compose run $disableTty --rm $runnerContainerName "
     local commandsInsideContainer=${@}
     set -x
     $runCmd bash -c "$commandsInsideContainer"
@@ -29,7 +36,7 @@ function composeRunBackend(){
 # and run them inside the runner container, with the port mapped
 function composeRunBackendWithPort(){
     local port=$1
-    local runCmd="docker compose run -p $port:$port --rm $runnerContainerName "
+    local runCmd="docker compose run $disableTty -p $port:$port --rm $runnerContainerName "
     local commandsInsideContainer=${@:2}
     set -x
     $runCmd bash -c "$commandsInsideContainer"
@@ -42,6 +49,10 @@ echo
 
 # Getting argument
 readonly arg=${1:-"'not set'"}
+
+# Now we match the argument against various optoins
+# Note, the structure of this block is important and indention must be preserved
+# as this is used to autogenerate help
 case "$arg" in
     quickstart)
         echo "Run all Quick Start Commands"
