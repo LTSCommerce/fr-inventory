@@ -16,11 +16,11 @@ readonly thisScriptName="$0"
 readonly runnerContainerName="runner"
 
 # TTY is disabled by default, generally its not needed
-# To enable TTY, export DISABLE_RUN_TTY=0 before calling run
+# To disable TTY, export DISABLE_RUN_TTY=1 before calling run
 # Also of course this can be overridden as required for specific run commands
-# eg DISABLE_RUN_TTY=0 ./run yarn next lint
+# eg DISABLE_RUN_TTY=1 ./run yarn next lint
 # Read more about this: https://stackoverflow.com/a/40026942
-readonly disableTty="$([[ "${DISABLE_RUN_TTY:-0}" == "0" ]] && echo '--no-tty' || echo '')"
+readonly disableTty="$([[ "${DISABLE_RUN_TTY:-0}" == "1" ]] && echo '--no-TTY' || echo '')"
 
 # This function will take an unlimited number of command arguments 
 # and run them inside the runner container
@@ -111,7 +111,7 @@ case "$arg" in
     yarn)
         echo "Run Yarn Command"
         composeRunBackend yarn --cache-folder .next/cache/yarn ${@:2}
-        ;;
+        ;;    
     d|dev)
         echo "Run Dev Server for local development"
         composeRunBackendWithPort 3000 yarn dev
