@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import updateResponder from '../../src/services/responder/updateResponder'
 import getResponderList from '../../src/services/responder/getResponderList'
+import { handleErrorGetMessageAndHttpCode } from '../../src/errorHandling'
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,6 +26,7 @@ export default async function handler(
         break
     }
   } catch (err) {
-    res.status(500).json({ error: err })
+    const [errorMessage, httpCode] = handleErrorGetMessageAndHttpCode(err)
+    res.status(httpCode).json({ error: errorMessage })
   }
 }

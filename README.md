@@ -197,6 +197,7 @@ TODO
 
 - https://basarat.gitbook.io/typescript/
 - https://www.typescriptlang.org/docs/
+- https://bobbyhadz.com/blog/typescript-instanceof-only-refers-to-type-but-is-being-used-as-value
 
 ## Linting etc automatically
 
@@ -233,3 +234,7 @@ TODO
 - https://giancarlobuomprisco.com/next/handling-api-errors-in-nextjs
 - https://www.paigeniedringhaus.com/blog/how-to-unit-test-next-js-api-routes-with-typescript
 - https://seanconnolly.dev/unit-testing-nextjs-api-routes
+
+## Error Handling
+
+- https://kentcdodds.com/blog/get-a-catch-block-error-message-with-typescript

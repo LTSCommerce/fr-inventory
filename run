@@ -137,15 +137,15 @@ case "$arg" in
         composeRunBackend yarn jest --max-workers $(numberOfWorkers)
         ;;
     tw|testw)
-        echo "Jest Watch: Run Jest Tests Automatically on File Update"
+        echo "Jest Watch - Run Jest Tests Automatically on File Update"
         composeRunBackend yarn jest --watch --max-workers $(numberOfWorkers)
         ;;
     td|testd)
         echo "Debug Jest Tests"
         composeRunBackendWithPort 9229 node --inspect-brk=0.0.0.0:9229 ./node_modules/.bin/jest --runInBand --testTimeout=100000000
         ;;
-    tdw|testdw)
-        echo "Jest Watch Debug: Debug Jest Tests, Rerun Automatically on File Update"
+    tdw|twd|testdw)
+        echo "Jest Watch Debug - Debug Jest Tests, Rerun Automatically on File Update"
         composeRunBackendWithPort 9229 node --inspect-brk=0.0.0.0:9229 ./node_modules/.bin/jest --runInBand --testTimeout=100000000 --watch 
         ;;                
     nd|node-debug)
