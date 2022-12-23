@@ -29,7 +29,7 @@ async function updateResponderApi(data: ResponderUpdate): Promise<Responder> {
     },
   })
   const updated = await response.json()
-  return JSON.parse(updated)
+  return updated
 }
 /**
  * This property defines the columns for the grid
@@ -75,7 +75,6 @@ const columns: GridColumns = [
 /**
  * This method loads the data to be used when the page is first loaded up
  * In this page, it creates the list of responders to be shown in the table
- * @returns
  */
 export const getStaticProps = async () => {
   const data = await getResponderList()

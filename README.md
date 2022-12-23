@@ -32,6 +32,12 @@ This will then spin up a hot reloading dev server. You can access the front end 
 As you make changes and save them, the page will automatically update so you can see your changes in pretty close to
 real time.
 
+### Install the React Dev Tools
+
+You will want to make sure you have this extension installed:
+
+https://reactjs.org/blog/2015/09/02/new-react-developer-tools.html#installation
+
 ---
 
 # VSCode
