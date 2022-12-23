@@ -193,6 +193,11 @@ TODO
 
 # Links/Docs/Resource
 
+## Typescript
+
+- https://basarat.gitbook.io/typescript/
+- https://www.typescriptlang.org/docs/
+
 ## Linting etc automatically
 
 - https://paulintrognon.fr/blog/typescript-prettier-eslint-next-js
@@ -216,9 +221,15 @@ TODO
 
 - https://jestjs.io/docs/using-matchers
 
-# Transactions for Tests
+## Transactions for Tests
 
 - https://selimb.hashnode.dev/speedy-prisma-pg-tests
 - https://github.com/prisma/prisma/issues/12458
 - https://github.com/chax-at/transactional-prisma-testing
 - https://www.npmjs.com/package/@quramy/jest-prisma?activeTab=readme
+
+## NextJS API
+
+- https://giancarlobuomprisco.com/next/handling-api-errors-in-nextjs
+- https://www.paigeniedringhaus.com/blog/how-to-unit-test-next-js-api-routes-with-typescript
+- https://seanconnolly.dev/unit-testing-nextjs-api-routes

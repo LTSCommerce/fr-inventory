@@ -1,4 +1,4 @@
-import getResponderList from '../getResponderList'
+import getResponderList from '../../../../src/services/responder/getResponderList'
 
 test('it can load all the responders', async () => {
   const actual = await getResponderList()

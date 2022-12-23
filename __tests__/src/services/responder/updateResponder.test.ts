@@ -1,5 +1,5 @@
-import updateResponder from '../updateResponder'
-import prisma from '../../../prisma'
+import updateResponder from '../../../../src/services/responder/updateResponder'
+import prisma from '../../../../src/prisma'
 
 describe(updateResponder, () => {
   test('it can update responder name', async () => {
