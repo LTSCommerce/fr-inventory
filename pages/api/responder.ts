@@ -22,7 +22,8 @@ export default async function handler(
         break
 
       default:
-        res.status(400).json({ message: 'Invalid request' })
+        res.setHeader('Allow', ['GET', 'POST'])
+        res.status(405).end(`Method ${requestMethod} Not Allowed`)
         break
     }
   } catch (err) {

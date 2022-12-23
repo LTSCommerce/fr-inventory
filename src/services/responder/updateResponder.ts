@@ -1,10 +1,10 @@
 import { Responder } from '@prisma/client'
 import prisma from '../../prisma'
 
-type responderUpdate = Omit<Responder, 'createdAt' | 'updatedAt'>
+export type ResponderUpdate = Omit<Responder, 'createdAt' | 'updatedAt'>
 
 export default async function updateResponder(
-  data: responderUpdate
+  data: ResponderUpdate
 ): Promise<Responder> {
   const result = await prisma.responder.update({
     where: {
@@ -14,3 +14,4 @@ export default async function updateResponder(
   })
   return result
 }
+
