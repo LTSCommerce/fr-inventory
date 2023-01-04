@@ -42,6 +42,29 @@ function composeRunBackendWithPort(){
     set +x
 }
 
+# This function will take an unlimited number of integer port args followed by an unlimited number of commands
+# and run them inside the runner container, with the ports mapped
+function composeRunBackendWithPorts(){
+    local portArgs=''
+    local commandsInsideContainer=''
+    local doingPorts=1
+    for curArg in "$@"; do
+        if [[ "1"=="$doingPorts" ]]; then
+            if [[ "$curArg" =~ ^[0-9]+$ ]]; then
+                portArgs="$portArgs -p $curArg:$curArg "
+                continue
+            else
+                doingPorts=0
+            fi
+        fi
+        commandsInsideContainer="$commandsInsideContainer $curArg"
+    done
+    local runCmd="docker compose run $disableTty $portArgs --rm $runnerContainerName "
+    set -x
+    $runCmd bash -c "$commandsInsideContainer"
+    set +x
+}
+
 function numberOfCpuCores(){
     getconf _NPROCESSORS_ONLN
 }
@@ -131,6 +154,10 @@ case "$arg" in
     d|dev)
         echo "Run Dev Server for local development"
         composeRunBackendWithPort 3000 yarn dev
+        ;;
+    dbg|debug)
+        echo "Run Dev Server with Debugging for local development and debugging"
+        composeRunBackendWithPorts 9229 9230 3000 node --inspect-brk=0.0.0.0:9229 ./node_modules/.bin/next dev
         ;;
     t|test)
         echo "Run Jest Tests"
