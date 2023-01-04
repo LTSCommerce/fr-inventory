@@ -36,7 +36,7 @@ services:
       - 8081:80
 
   # This container is not running by default, but it is used to run commands and adhoc servers.
-  # NOTE - port mapping configs do not have any effect when running docker compose run
+  # NOTE - Port mapping is handled dynamically in the ./run script
   runner:
     image: node:16
     links:
@@ -45,10 +45,6 @@ services:
     working_dir: /usr/src/app
     volumes:
       - ./:/usr/src/app
-    # Port mapping config has no effect when using docker compose run
-#     ports:
-#       - 5555:5555 # prisma studio
-#       - 3000:3000 # next dev
 
 volumes:
   mysql-data:

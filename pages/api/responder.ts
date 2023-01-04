@@ -11,7 +11,7 @@ export default async function handler(
     const requestMethod = req.method
     switch (requestMethod) {
       case 'POST':
-        const updateData = JSON.parse(req.body)
+        const updateData = req.body
         const updated = await updateResponder(updateData)
         res.status(200).json(updated)
         break
