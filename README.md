@@ -32,11 +32,50 @@ This will then spin up a hot reloading dev server. You can access the front end 
 As you make changes and save them, the page will automatically update so you can see your changes in pretty close to
 real time.
 
-### Install the React Dev Tools
+### Debugging The Development Server Side Code
 
-You will want to make sure you have this extension installed:
+To debug the development server is a little more involved. The reason being that the actual process you want to debug is a child process of the command you have to run.
 
-https://reactjs.org/blog/2015/09/02/new-react-developer-tools.html#installation
+This is the code that runs the API backend and other backend code in Next.
+
+To run the dev server in debug mode, use this command:
+
+```bash
+./run debug
+```
+
+You will see output like:
+
+```
+Run Dev Server with Debugging for local development and debugging
++ docker compose run -p 9229:9229 -p 9230:9230 -p 3000:3000 --rm runner bash -c ' node --inspect-brk=0.0.0.0:9229 ./node_modules/.bin/next dev'
+[+] Running 1/0
+ ⠿ Container fr-inventory-mysql-1  Running                                                        0.0s
+Debugger listening on ws://0.0.0.0:9229/d9a84136-76ea-423c-9e51-7a7e6ac10bd9
+For help, see: https://nodejs.org/en/docs/inspector
+```
+
+You then need to attach to the first debug session which is running on port 9229. You just simple connect and then press teh play button to get this one to continue. There is already a debug profile configured in the [launch.json](.vscode/launch.json) file called `Docker: Attach to Node` - use this one for this step
+
+You should see multiple debugger attached messages
+
+```
+Debugger attached.
+Debugger attached.
+Debugger attached.
+Debugger attached.
+```
+
+Once you connect and press play, a new debug session will be started on port 9230 - this is the one you actually want to debug
+
+```
+Debugger listening on ws://0.0.0.0:9230/29ea6bbb-1037-4b4e-a0a5-2a47af11999f
+For help, see: https://nodejs.org/en/docs/inspector
+```
+
+For attaching to this one, we have another configuration in [launch.json](.vscode/launch.json) file called `Docker: Attach to Next Dev` - use this one to attach to the actual dev server.
+
+Once this one is attached, you should hit breakpoints in your server side code.
 
 ---
 
@@ -46,7 +85,7 @@ This project is optimised to work with vscode.
 
 ## Recommended Extensions
 
-There are some preconfigured recommended extensions
+There are some preconfigured recommended extensions for VSCode
 
 To install these, open the command pallete (`[Ctrl]`+`[Shift]`+`[p]`) and then type "show recommended extensions" and you will be given an easy view to install them
 
@@ -191,9 +230,30 @@ This gives us an easy way to do proper integration tests that really interact wi
 
 Each test is wrapped in a transaction, and that transaction is then rolled back. This means that tests don't actually pollute the database and makes testing a lot easier.
 
+---
+
 # Frontend
 
-TODO
+The frontend is standard [NextJS](https://nextjs.org/) and used [React](https://reactjs.org/)
+
+## Install the React Dev Tools
+
+You will want to make sure you have this extension installed for Chrome
+
+https://reactjs.org/blog/2015/09/02/new-react-developer-tools.html#installation
+
+## MUI Components
+
+This system is using [MUI components](https://mui.com/). This allows us to quickly add functionality using high quality components.
+
+### Datagrid
+
+The data grid provides a table/spreadsheet type functionality
+
+https://mui.com/x/react-data-grid/
+
+We are trying to implement full CRUD:
+https://mui.com/x/react-data-grid/editing/#full-featured-crud-component
 
 ---
 
@@ -218,6 +278,7 @@ TODO
 
 - https://mui.com/material-ui/getting-started/overview/
 - https://mui.com/x/introduction/
+- https://mui.com/x/react-data-grid/editing/#full-featured-crud-component
 
 ## Prisma ORM
 
