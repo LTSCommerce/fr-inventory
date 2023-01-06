@@ -48,6 +48,8 @@ async function updateResponderApi(data: ResponderUpdate): Promise<Responder> {
     },
   })
   const updated = await response.json()
+  // force the ID to stay as the negative ID so that we avoid duplicate rows
+  updated.id=data.id
   return updated
 }
 
@@ -120,12 +122,12 @@ export default function Home({
    * @see https://mui.com/x/react-data-grid/column-definition/
    */
   const columns: GridColumns = [
-    {
-      field: 'id',
-      headerName: 'ID',
-      editable: false,
-      width: 90,
-    },
+    // {
+    //   field: 'id',
+    //   headerName: 'ID',
+    //   editable: false,
+    //   width: 90,
+    // },
     {
       field: 'name',
       headerName: 'Name',
@@ -166,11 +168,13 @@ export default function Home({
         if (isInEditMode) {
           return [
             <GridActionsCellItem
+              key="saveAction"
               icon={<SaveIcon />}
               label="Save"
               onClick={handleSaveClick(id)}
             />,
             <GridActionsCellItem
+              key="cancelAction"
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
@@ -182,6 +186,7 @@ export default function Home({
 
         return [
           <GridActionsCellItem
+            key="editAction"
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
@@ -189,6 +194,7 @@ export default function Home({
             color="inherit"
           />,
           <GridActionsCellItem
+            key="deleteAction"
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
@@ -229,7 +235,7 @@ export default function Home({
   }
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id))
+    setRows(rows.filter((row: Responder) => row.id !== id))
   }
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -238,17 +244,17 @@ export default function Home({
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     })
 
-    const editedRow = rows.find((row) => row.id === id)
-    if (editedRow!.isNew) {
-      setRows(rows.filter((row) => row.id !== id))
+    const editedRow = rows.find((row: Responder) => row.id === id)
+    if (editedRow.isNew) {
+      setRows(rows.filter((row: Responder) => row.id !== id))
     }
   }
 
-  const processRowUpdate = React.useCallback(async (newRow: GridRowModel) => {
+  const processRowUpdate = React.useCallback(async (updatedRow: GridRowModel) => {
     const updateData: ResponderUpdate = {
-      id: newRow.id,
-      callsign: newRow.callsign,
-      name: newRow.name,
+      id: updatedRow.id,
+      callsign: updatedRow.callsign,
+      name: updatedRow.name,
     }
     // Make the HTTP request to save in the backend
     const response = await updateResponderApi(updateData)

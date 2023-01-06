@@ -32,6 +32,14 @@ This will then spin up a hot reloading dev server. You can access the front end 
 As you make changes and save them, the page will automatically update so you can see your changes in pretty close to
 real time.
 
+## Debugging
+
+This project features client side (browser) and server side code. You can debug both of these code bases, or even both combined (docs TODO)
+
+### Debugging Client Side Code
+
+If you want to debug the code that is running the browser
+
 ### Debugging The Development Server Side Code
 
 To debug the development server is a little more involved. The reason being that the actual process you want to debug is a child process of the command you have to run.
