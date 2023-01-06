@@ -13,4 +13,15 @@ describe(updateResponder, () => {
     expect(updatedResponder.name).toEqual('foo')
     expect(updatedResponder.callsign).toEqual(updateData.callsign)
   })
+  test('it can create a new responder when id is negative', async () => {
+    const createData = {
+      id: -1,
+      name: 'foo',
+      callsign: 'bar',
+    }
+    const created = await updateResponder(createData)
+    expect(created.name).toEqual('foo')
+    expect(created.id).not.toEqual(createData.id)
+    prisma.responder.delete({ where: { id: created.id } })
+  })
 })

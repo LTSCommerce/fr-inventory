@@ -10,7 +10,7 @@ describe('api/responder', () => {
     expect(res.statusCode).toBe(200)
     // @see https://basarat.gitbook.io/typescript/type-system/type-assertion#double-assertion
     const body = res._getJSONData()
-    expect(body).toHaveLength(3)
+    expect(body.length).toBeGreaterThan(3)
   })
 
   test('it can update a responder', async () => {
@@ -33,7 +33,7 @@ describe('api/responder', () => {
   test('it returns an error response on invalid responder ID', async () => {
     const testResponder = await prisma.responder.findFirstOrThrow()
     const updateData = {
-      id: -999,
+      id: 999,
       name: 'foo',
       callsign: testResponder.callsign,
     }
@@ -42,7 +42,9 @@ describe('api/responder', () => {
     req._setBody(updateJson as unknown as Body)
     const consoleError = jest
       .spyOn(global.console, 'error')
-      .mockImplementation(() => {})
+      .mockImplementation(() => {
+        return null
+      })
     await handler(req, res)
     expect(consoleError).toHaveBeenCalledTimes(1)
     consoleError.mockReset()

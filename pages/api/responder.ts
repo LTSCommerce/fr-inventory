@@ -28,7 +28,7 @@ export default async function handler(
         break
 
       default:
-        res.setHeader('Allow', ['GET', 'POST'])
+        res.setHeader('Allow', ['GET', 'POST', 'DELETE'])
         res.status(405).end(`Method ${requestMethod} Not Allowed`)
         break
     }
