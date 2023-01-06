@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import updateResponder from '../../src/services/responder/updateResponder'
 import getResponderList from '../../src/services/responder/getResponderList'
+import deleteResponder from '../../src/services/responder/deleteResponder'
 import { handleErrorGetMessageAndHttpCode } from '../../src/errorHandling'
 
 export default async function handler(
@@ -19,6 +20,11 @@ export default async function handler(
       case 'GET':
         const responders = await getResponderList()
         res.status(200).json(responders)
+        break
+
+      case 'DELETE':
+        await deleteResponder(req.body)
+        res.status(200).json('deleted')
         break
 
       default:

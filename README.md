@@ -38,7 +38,14 @@ This project features client side (browser) and server side code. You can debug 
 
 ### Debugging Client Side Code
 
-If you want to debug the code that is running the browser
+If you want to debug the code that is running the browser then you should use the `Next.js: debug client-side` configuration in [launch.json](.vscode/launch.json)
+
+First, make sure the dev server is running (`./run dev`)
+
+In the bottom bar of VSCode, you can see the debug options, choose teh correct one and launch it. 
+
+This will then open a chrome window and attach to debugging. You can then set breakpoints and work on your code. Note this will only let you debug client side code, not anything backend (eg api pages).
+
 
 ### Debugging The Development Server Side Code
 

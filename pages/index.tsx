@@ -39,20 +39,6 @@ import getResponderList from '../src/services/responder/getResponderList'
 import { ResponderUpdate } from '../src/services/responder/updateResponder'
 import { Responder } from '@prisma/client'
 
-async function updateResponderApi(data: ResponderUpdate): Promise<Responder> {
-  const response = await fetch('/api/responder', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  const updated = await response.json()
-  // force the ID to stay as the negative ID so that we avoid duplicate rows
-  updated.id=data.id
-  return updated
-}
-
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
   setRowModesModel: (
@@ -78,7 +64,6 @@ function EditToolbar(props: EditToolbarProps) {
         callsign: '',
         createdAt: new Date(),
         updatedAt: new Date(),
-        isNew: true,
       },
     ])
     setRowModesModel((oldModel) => ({
@@ -114,20 +99,43 @@ export default function Home({
   data,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [rows, setRows] = React.useState(data)
+
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   )
+
+  async function updateResponderApi(data: ResponderUpdate): Promise<Responder> {
+    const response = await fetch('/api/responder', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    const updated = await response.json()
+    data.id=updated.id
+    return updated
+  }
+
+  async function deleteResponderApi(id: GridRowId) {
+    const response = await fetch('/api/responder/', {
+      method: 'DELETE',
+      body: JSON.stringify(id),
+    })
+    const updated = await response.json()
+    return updated
+  }
   /**
    * This property defines the columns for the grid
    * @see https://mui.com/x/react-data-grid/column-definition/
    */
   const columns: GridColumns = [
-    // {
-    //   field: 'id',
-    //   headerName: 'ID',
-    //   editable: false,
-    //   width: 90,
-    // },
+    {
+      field: 'id',
+      headerName: 'ID',
+      editable: false,
+      width: 90,
+    },
     {
       field: 'name',
       headerName: 'Name',
@@ -234,8 +242,13 @@ export default function Home({
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } })
   }
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const deleteRow = (id: GridRowId) => {
     setRows(rows.filter((row: Responder) => row.id !== id))
+  }
+
+  const handleDeleteClick = (id: GridRowId) => () => {
+    deleteResponderApi(id)
+    deleteRow(id)
   }
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -243,27 +256,29 @@ export default function Home({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     })
-
-    const editedRow = rows.find((row: Responder) => row.id === id)
-    if (editedRow.isNew) {
-      setRows(rows.filter((row: Responder) => row.id !== id))
+    if (id < 0) {
+      deleteRow(id)
     }
   }
 
-  const processRowUpdate = React.useCallback(async (updatedRow: GridRowModel) => {
-    const updateData: ResponderUpdate = {
-      id: updatedRow.id,
-      callsign: updatedRow.callsign,
-      name: updatedRow.name,
-    }
-    // Make the HTTP request to save in the backend
-    const response = await updateResponderApi(updateData)
-    setSnackbar({
-      children: 'responder successfully saved',
-      severity: 'success',
-    })
-    return response
-  }, [])
+  const processRowUpdate = React.useCallback(
+    async (updatedRow: GridRowModel) => {
+      const updateData: ResponderUpdate = {
+        id: updatedRow.id,
+        callsign: updatedRow.callsign,
+        name: updatedRow.name,
+      }
+      // Make the HTTP request to save in the backend
+      const response = await updateResponderApi(updateData)
+      setSnackbar({
+        children: 'responder successfully saved',
+        severity: 'success',
+      })
+
+      return response
+    },
+    []
+  )
 
   const handleProcessRowUpdateError = React.useCallback((error: Error) => {
     setSnackbar({ children: error.message, severity: 'error' })
@@ -286,7 +301,7 @@ export default function Home({
             editMode="row"
             columns={columns}
             pageSize={10}
-            rowsPerPageOptions={[5]}
+            rowsPerPageOptions={[5, 10, 20]}
             // checkboxSelection
             disableSelectionOnClick
             onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
