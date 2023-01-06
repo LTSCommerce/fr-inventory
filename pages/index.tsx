@@ -46,29 +46,40 @@ interface EditToolbarProps {
   ) => void
 }
 
-// We keep a track of the new row ID and decrement for each row.
-// Negative IDs will be regarded as null when being submitted and then the real ID will be generated
-// When the row is saved
-let newRowId = 0
+async function updateResponderApi(data: ResponderUpdate): Promise<Responder> {
+  const response = await fetch('/api/responder', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  const updated = await response.json()
+  return updated
+}
+
+async function deleteResponderApi(id: GridRowId) {
+  const response = await fetch('/api/responder/', {
+    method: 'DELETE',
+    body: JSON.stringify(id),
+  })
+  const updated = await response.json()
+  return updated
+}
 
 function EditToolbar(props: EditToolbarProps) {
   const { setRows, setRowModesModel } = props
 
-  const handleClick = () => {
-    const id = --newRowId
-    setRows((oldRows) => [
-      ...oldRows,
-      {
-        id,
-        name: '',
-        callsign: '',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ])
+  const handleClick = async () => {
+    const newRow = await updateResponderApi({
+      id: -1,
+      name: '',
+      callsign: '',
+    })
+    setRows((oldRows) => [...oldRows, newRow])
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      [newRow.id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }))
   }
 
@@ -104,27 +115,6 @@ export default function Home({
     {}
   )
 
-  async function updateResponderApi(data: ResponderUpdate): Promise<Responder> {
-    const response = await fetch('/api/responder', {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    const updated = await response.json()
-    data.id=updated.id
-    return updated
-  }
-
-  async function deleteResponderApi(id: GridRowId) {
-    const response = await fetch('/api/responder/', {
-      method: 'DELETE',
-      body: JSON.stringify(id),
-    })
-    const updated = await response.json()
-    return updated
-  }
   /**
    * This property defines the columns for the grid
    * @see https://mui.com/x/react-data-grid/column-definition/
