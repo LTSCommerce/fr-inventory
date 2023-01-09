@@ -20,3 +20,9 @@ export function httpMocker(method: RequestMethod = 'GET'): {
   }
   return { req, res }
 }
+type ConsoleMethod = 'log' | 'error' | 'info' | 'debug' | 'warn'
+export function consoleMocker(consoleMethod: ConsoleMethod = 'error') {
+  return jest.spyOn(global.console, consoleMethod).mockImplementation(() => {
+    return null
+  })
+}
