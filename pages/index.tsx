@@ -5,7 +5,9 @@ import * as React from 'react'
 
 import getResponderList from '../src/services/responder/getResponderList'
 import ResponderCrud from '../src/components/ResponderCrud'
-import { Responder } from '@prisma/client'
+import { Responder, ItemType } from '@prisma/client'
+import ItemTypeCrud from '../src/components/ItemTypeCrud'
+import getItemTypeList from '../src/services/itemType/getItemTypeList'
 
 /**
  * This method loads the data to be used when the page is first loaded up
@@ -14,21 +16,22 @@ import { Responder } from '@prisma/client'
 export const getStaticProps = async () => {
   const responders = await getResponderList()
   const responderRows = JSON.parse(JSON.stringify(responders))
+  const itemTypes = await getItemTypeList()
+  const itemTypeRows = JSON.parse(JSON.stringify(itemTypes))
   return {
     props: {
       responderRows: responderRows,
-    }    
+      itemTypeRows: itemTypeRows,
+    },
   }
 }
 
-interface HomeProps{
-  responderRows:Responder[]
+interface HomeProps {
+  responderRows: Responder[]
+  itemTypeRows: ItemType[]
 }
 
-export default function Home(
-  props:HomeProps
-  ) {
-  
+export default function Home(props: HomeProps) {
   return (
     <>
       <Head>
@@ -40,6 +43,8 @@ export default function Home(
       <main className={styles.main}>
         <h1>Responders</h1>
         <ResponderCrud rows={props.responderRows} />
+        <h1>Item Types</h1>
+        <ItemTypeCrud rows={props.itemTypeRows} />
       </main>
     </>
   )
