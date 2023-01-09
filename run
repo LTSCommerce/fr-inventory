@@ -74,6 +74,26 @@ function numberOfWorkers(){
     echo $(($(numberOfCpuCores)/divideCoresBy))
 }
 
+function clearEverything(){
+    echo "Clearing Everything"
+    echo " - Removing containers + data"
+    docker compose down -v --remove-orphans
+    echo " - Removing .next directory"
+    rm -rf $projectRootDir/.next
+    echo " - Removing node_modules"
+    rm -rf $projectRootDir/node_modules
+    echo " - Truncating yarn-error.log"
+    echo '' > $projectRootDir/yarn-error.log
+    echo 
+    echo "done..."
+}
+
+function cachedYarnInContainer(){
+    local commandsInsideContainer=${@}
+    mkdir -p "$projectRootDir/.next/cache/yarn"
+    composeRunBackend yarn --cache-folder .next/cache/yarn "$commandsInsideContainer"
+}
+
 # Some new lines for readability
 echo
 echo
@@ -117,7 +137,7 @@ case "$arg" in
         ;;
     destroy)
         echo "Stop Docker Containers and Remove Data"
-        docker compose down -v --remove-orphans
+        clearEverything
         ;;
     ps)
         echo "List of running Docker Containers"
@@ -125,7 +145,7 @@ case "$arg" in
         ;;
     i|install)
         echo "Install all packages, set up Husky"
-        composeRunBackend yarn --cache-folder .next/cache/yarn
+        cachedYarnInContainer ""
         ;;
     p|db-push)
         echo "Force update DB to match Schema"
@@ -149,7 +169,7 @@ case "$arg" in
         ;;
     yarn)
         echo "Run Yarn Command"
-        composeRunBackend yarn --cache-folder .next/cache/yarn ${@:2}
+        cachedYarnInContainer ${@:2}
         ;;    
     d|dev)
         echo "Run Dev Server for local development"
