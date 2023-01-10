@@ -51,7 +51,7 @@ describe('api/responder', () => {
     const consoleError = consoleMocker('error')
     await handler(req, res)
     expect(consoleError).toHaveBeenCalledTimes(1)
-    expect(consoleError.mock.lastCall[0].message).toMatch(/Record to update not found/)
+    expect(consoleError.mock.lastCall?.[0].message ?? '').toMatch(/Record to update not found/)
     const body = res._getJSONData()
     expect(res.statusCode).toBe(400)
     expect(body.error).toMatch(/^DB error: \(P2025\)/)

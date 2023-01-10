@@ -30,13 +30,9 @@ import Alert, { AlertProps } from '@mui/material/Alert'
 /**
  * Our custom services to load or persist data
  */
-
-import {
-  ResponderInsert,
-  ResponderUpdate,
-} from '../services/responder/updateResponder'
-import { Responder } from '@prisma/client'
-import { deleteResponderApi, updateResponderApi } from '../api-client/responder'
+import { ResponderItemUpdate } from '../services/itemType/updateResponderItem'
+import { ResponderItem } from '@prisma/client'
+import { deleteResponderItemApi, updateResponderItemApi } from '../api-client/itemType'
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
@@ -49,10 +45,12 @@ function EditToolbar(props: EditToolbarProps) {
   const { setRows, setRowModesModel } = props
 
   const handleClick = async () => {
-    const newRow: Responder = await updateResponderApi({
+    const newRow = await updateResponderItemApi({
       id: -1,
       name: '',
-      callsign: '',
+      hasBattery: false,
+      hasExpiryDate: false,
+      minimum: 1,
     })
     setRows((oldRows) => [...oldRows, newRow])
     setRowModesModel((oldModel) => ({
@@ -70,11 +68,11 @@ function EditToolbar(props: EditToolbarProps) {
   )
 }
 
-interface ResponderCrudProps {
-  rows: Responder[]
+interface ResponderItemCrudProps {
+  rows: ResponderItem[]
 }
 
-export default function ResponderCrud(props: ResponderCrudProps) {
+export default function ResponderItemCrud(props: ResponderItemCrudProps) {
   const [rows, setRows] = React.useState(props.rows)
 
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
@@ -100,11 +98,28 @@ export default function ResponderCrud(props: ResponderCrudProps) {
       minWidth: 150,
     },
     {
-      field: 'callsign',
-      headerName: 'Call Sign',
+      field: 'hasExpiryDate',
+      headerName: 'Has Expiry Date?',
       editable: true,
+      type: 'boolean',
       flex: 1,
-      minWidth: 150,
+      minWidth: 30,
+    },
+    {
+      field: 'hasBattery',
+      headerName: 'Has Battery?',
+      editable: true,
+      type: 'boolean',
+      flex: 1,
+      minWidth: 30,
+    },
+    {
+      field: 'minimum',
+      headerName: 'Minimum',
+      editable: true,
+      type: 'nummber',
+      flex: 1,
+      minWidth: 50,
     },
     {
       field: 'createdAt',
@@ -199,11 +214,11 @@ export default function ResponderCrud(props: ResponderCrudProps) {
   }
 
   const deleteRow = (id: GridRowId) => {
-    setRows(rows.filter((row: Responder) => row.id !== id))
+    setRows(rows.filter((row: ResponderItem) => row.id !== id))
   }
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    deleteResponderApi(id)
+    deleteResponderItemApi(id)
     deleteRow(id)
   }
 
@@ -219,15 +234,17 @@ export default function ResponderCrud(props: ResponderCrudProps) {
 
   const processRowUpdate = React.useCallback(
     async (updatedRow: GridRowModel) => {
-      const updateData: ResponderUpdate = {
+      const updateData: ResponderItemUpdate = {
         id: updatedRow.id,
-        callsign: updatedRow.callsign,
         name: updatedRow.name,
+        hasBattery: updatedRow.hasBattery,
+        hasExpiryDate: updatedRow.hasExpiryDate,
+        minimum: updatedRow.minmum,
       }
       // Make the HTTP request to save in the backend
-      const response = await updateResponderApi(updateData)
+      const response = await updateResponderItemApi(updateData)
       setSnackbar({
-        children: 'responder successfully saved',
+        children: 'itemType successfully saved',
         severity: 'success',
       })
 
