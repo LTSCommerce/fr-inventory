@@ -8,6 +8,8 @@ import ResponderCrud from '../src/components/ResponderCrud'
 import { Responder, ItemType } from '@prisma/client'
 import ItemTypeCrud from '../src/components/ItemTypeCrud'
 import getItemTypeList from '../src/services/itemType/getItemTypeList'
+import { Tab, Tabs } from '@mui/material'
+import { Box } from '@mui/system'
 
 /**
  * This method loads the data to be used when the page is first loaded up
@@ -31,7 +33,41 @@ interface HomeProps {
   itemTypeRows: ItemType[]
 }
 
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  }
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  )
+}
+
 export default function Home(props: HomeProps) {
+  const [value, setValue] = React.useState(0)
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue)
+  }
   return (
     <>
       <Head>
@@ -41,10 +77,18 @@ export default function Home(props: HomeProps) {
         {/*<link rel="icon" href="/favicon.ico" />*/}
       </Head>
       <main className={styles.main}>
-        <h1>Responders</h1>
-        <ResponderCrud rows={props.responderRows} />
-        <h1>Item Types</h1>
-        <ItemTypeCrud rows={props.itemTypeRows} />
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Responders" {...a11yProps(0)} />
+          <Tab label="Item Types" {...a11yProps(1)} />
+        </Tabs>
+        <TabPanel value={value} index={0}>
+          <h1>Responders</h1>
+          <ResponderCrud rows={props.responderRows} />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <h1>Item Types</h1>
+          <ItemTypeCrud rows={props.itemTypeRows} />
+        </TabPanel>
       </main>
     </>
   )

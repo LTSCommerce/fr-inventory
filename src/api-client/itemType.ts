@@ -5,7 +5,7 @@ import { ItemTypeUpdate } from '../services/itemType/updateItemType'
 export async function updateItemTypeApi(
   data: ItemTypeUpdate
 ): Promise<ItemType> {
-  const response = await fetch('/api/itemType', {
+  const response = await fetch('/api/itemtype', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: {

@@ -48,7 +48,9 @@ function EditToolbar(props: EditToolbarProps) {
     const newRow = await updateItemTypeApi({
       id: -1,
       name: '',
-      callsign: '',
+      hasBattery: false,
+      hasExpiryDate: false,
+      minimum: 1,
     })
     setRows((oldRows) => [...oldRows, newRow])
     setRowModesModel((oldModel) => ({
@@ -99,6 +101,7 @@ export default function ItemTypeCrud(props: ItemTypeCrudProps) {
       field: 'hasExpiryDate',
       headerName: 'Has Expiry Date?',
       editable: true,
+      type: 'boolean',
       flex: 1,
       minWidth: 30,
     },
@@ -106,6 +109,7 @@ export default function ItemTypeCrud(props: ItemTypeCrudProps) {
       field: 'hasBattery',
       headerName: 'Has Battery?',
       editable: true,
+      type: 'boolean',
       flex: 1,
       minWidth: 30,
     },
@@ -113,6 +117,7 @@ export default function ItemTypeCrud(props: ItemTypeCrudProps) {
       field: 'minimum',
       headerName: 'Minimum',
       editable: true,
+      type: 'nummber',
       flex: 1,
       minWidth: 50,
     },
