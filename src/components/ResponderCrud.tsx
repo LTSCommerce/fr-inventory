@@ -24,6 +24,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Close'
+import BallotIcon from '@mui/icons-material/Ballot'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertProps } from '@mui/material/Alert'
 
@@ -31,12 +32,10 @@ import Alert, { AlertProps } from '@mui/material/Alert'
  * Our custom services to load or persist data
  */
 
-import {
-  ResponderInsert,
-  ResponderUpdate,
-} from '../services/responder/updateResponder'
+import { ResponderUpdate } from '../services/responder/updateResponder'
 import { Responder } from '@prisma/client'
 import { deleteResponderApi, updateResponderApi } from '../api-client/responder'
+import { useRouter } from 'next/router'
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
@@ -80,6 +79,7 @@ export default function ResponderCrud(props: ResponderCrudProps) {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   )
+  const router = useRouter()
 
   /**
    * This property defines the columns for the grid
@@ -162,6 +162,15 @@ export default function ResponderCrud(props: ResponderCrudProps) {
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            key="viewItemsAction"
+            icon={<BallotIcon />}
+            label="View Items"
+            onClick={() => {
+              router.push(`/responder-items/${id}`)
+            }}
             color="inherit"
           />,
         ]

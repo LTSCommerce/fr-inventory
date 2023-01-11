@@ -24,33 +24,41 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Close'
+import HomeIcon from '@mui/icons-material/Home'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertProps } from '@mui/material/Alert'
 
 /**
  * Our custom services to load or persist data
  */
-import { ResponderItemUpdate } from '../services/itemType/updateResponderItem'
-import { ResponderItem } from '@prisma/client'
-import { deleteResponderItemApi, updateResponderItemApi } from '../api-client/itemType'
+import { ResponderItemUpdate } from '../services/responderItem/updateResponderItem'
+import { ItemType, Responder, ResponderItem } from '@prisma/client'
+import {
+  deleteResponderItemApi,
+  updateResponderItemApi,
+} from '../api-client/responderItem'
+import { ItemTypeValues } from '../../pages/responder-items/[rid]'
+import { useRouter } from 'next/router'
 
 interface EditToolbarProps {
+  currentResponder: Responder
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
   setRowModesModel: (
     newModel: (oldModel: GridRowModesModel) => GridRowModesModel
   ) => void
+  itemTypeList: ItemType[]
 }
 
 function EditToolbar(props: EditToolbarProps) {
-  const { setRows, setRowModesModel } = props
-
+  const { currentResponder, setRows, setRowModesModel, itemTypeList } = props
+  const router = useRouter()
   const handleClick = async () => {
     const newRow = await updateResponderItemApi({
       id: -1,
-      name: '',
-      hasBattery: false,
-      hasExpiryDate: false,
-      minimum: 1,
+      itemTypeId: itemTypeList[0].id,
+      responderId: currentResponder.id,
+      expiry: itemTypeList[0].hasExpiryDate ? new Date() : null,
+      quantity: 0,
     })
     setRows((oldRows) => [...oldRows, newRow])
     setRowModesModel((oldModel) => ({
@@ -64,17 +72,33 @@ function EditToolbar(props: EditToolbarProps) {
       <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
         Add record
       </Button>
+      <Button
+        color="primary"
+        startIcon={<HomeIcon />}
+        onClick={() => {
+          router.push('/')
+        }}
+      >
+        Home
+      </Button>
     </GridToolbarContainer>
   )
 }
 
 interface ResponderItemCrudProps {
+  currentResponder: Responder
   rows: ResponderItem[]
+  itemTypeList: ItemType[]
+  itemTypeValues: ItemTypeValues
 }
 
 export default function ResponderItemCrud(props: ResponderItemCrudProps) {
+  const currentResponder: Responder = props.currentResponder
   const [rows, setRows] = React.useState(props.rows)
-
+  const [itemTypeList, setItemTypeList] = React.useState(props.itemTypeList)
+  const [itemTypeValues, setItemTypeValues] = React.useState(
+    props.itemTypeValues
+  )
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   )
@@ -91,41 +115,38 @@ export default function ResponderItemCrud(props: ResponderItemCrudProps) {
       width: 90,
     },
     {
-      field: 'name',
-      headerName: 'Name',
+      field: 'itemTypeId',
+      headerName: 'Item',
+      type: 'singleSelect',
+      valueOptions: itemTypeValues,
+      valueGetter: ({ value, colDef }) => {
+        const option = colDef.valueOptions.find(
+          ({ value: optionValue }) => value === optionValue
+        )
+        return option.label
+      },
+      width: 200,
       editable: true,
-      flex: 1,
-      minWidth: 150,
     },
     {
-      field: 'hasExpiryDate',
-      headerName: 'Has Expiry Date?',
+      field: 'quantity',
+      headerName: 'Quantity',
+      type: 'number',
       editable: true,
-      type: 'boolean',
-      flex: 1,
-      minWidth: 30,
     },
     {
-      field: 'hasBattery',
-      headerName: 'Has Battery?',
+      field: 'expiry',
+      headerName: 'Expiry',
       editable: true,
-      type: 'boolean',
-      flex: 1,
-      minWidth: 30,
-    },
-    {
-      field: 'minimum',
-      headerName: 'Minimum',
-      editable: true,
-      type: 'nummber',
-      flex: 1,
-      minWidth: 50,
+      type: 'date',
+      valueFormatter: (params) => new Date(params?.value),
     },
     {
       field: 'createdAt',
       headerName: 'Created',
       width: 150,
       editable: false,
+      type: 'date',
       valueFormatter: (params) => new Date(params?.value),
     },
     {
@@ -133,6 +154,7 @@ export default function ResponderItemCrud(props: ResponderItemCrudProps) {
       headerName: 'Updated',
       width: 150,
       editable: false,
+      type: 'date',
       valueFormatter: (params) => new Date(params?.value),
     },
     {
@@ -236,10 +258,10 @@ export default function ResponderItemCrud(props: ResponderItemCrudProps) {
     async (updatedRow: GridRowModel) => {
       const updateData: ResponderItemUpdate = {
         id: updatedRow.id,
-        name: updatedRow.name,
-        hasBattery: updatedRow.hasBattery,
-        hasExpiryDate: updatedRow.hasExpiryDate,
-        minimum: updatedRow.minmum,
+        expiry: updatedRow.expiry,
+        itemTypeId: updatedRow.itemTypeId,
+        responderId: currentResponder.id,
+        quantity: updatedRow.quantity,
       }
       // Make the HTTP request to save in the backend
       const response = await updateResponderItemApi(updateData)
@@ -265,8 +287,8 @@ export default function ResponderItemCrud(props: ResponderItemCrudProps) {
           rowModesModel={rowModesModel}
           editMode="row"
           columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[5, 10, 20]}
+          pageSize={100}
+          rowsPerPageOptions={[5, 10, 20, 50, 100]}
           // checkboxSelection
           disableSelectionOnClick
           onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
@@ -279,7 +301,12 @@ export default function ResponderItemCrud(props: ResponderItemCrudProps) {
             Toolbar: EditToolbar,
           }}
           componentsProps={{
-            toolbar: { setRows, setRowModesModel },
+            toolbar: {
+              currentResponder,
+              setRows,
+              setRowModesModel,
+              itemTypeList,
+            },
           }}
         />
         {!!snackbar && (

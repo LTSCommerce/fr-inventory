@@ -10,12 +10,13 @@ import ItemTypeCrud from '../src/components/ItemTypeCrud'
 import getItemTypeList from '../src/services/itemType/getItemTypeList'
 import { Tab, Tabs } from '@mui/material'
 import { Box } from '@mui/system'
+import { GetServerSideProps } from 'next'
 
 /**
  * This method loads the data to be used when the page is first loaded up
  * In this page, it creates the list of responders to be shown in the table
  */
-export const getStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const responders = await getResponderList()
   const responderRows = JSON.parse(JSON.stringify(responders))
   const itemTypes = await getItemTypeList()
