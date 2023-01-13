@@ -83,8 +83,12 @@ export default function Home(props: HomeProps) {
           <Tab label="Item Types" {...a11yProps(1)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          <h1>Responders</h1>
-          <ResponderCrud rows={props.responderRows} />
+          <div style={{ display: 'flex', height: '100%' }}>
+            <div style={{ flexGrow: 1 }}>
+              <h1>Responders</h1>
+              <ResponderCrud rows={props.responderRows} />
+            </div>
+          </div>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <h1>Item Types</h1>
