@@ -156,7 +156,8 @@ case "$arg" in
         composeRunBackend yarn prisma migrate dev
         ;;
     g|generate)
-        echo "Generate client"
+        echo "Prisma Format Schema and Generate Client"
+        composeRunBackend yarn prisma format
         composeRunBackend yarn prisma generate
         ;;
     f|db-fill)
@@ -208,7 +209,7 @@ case "$arg" in
         echo
         echo "The $thisScriptName script has the following options"
         echo
-        grep -Pzo '(?s)\s+?([a-z|]+?)\)\s+?(?:echo ")[^"]+' "$thisScriptName"  | sed -z 's/)\n        echo "/: /g' | column -s : -t
+        grep -Pzo '(?s)\s+?([a-z|-]+?)\)\s+?(?:echo ")[^"]+' "$thisScriptName"  | sed -z 's/)\n        echo "/: /g' | column -s : -t
         ;;
 esac
 
