@@ -5,12 +5,14 @@ import * as React from 'react'
 
 import getResponderList from '../src/services/responder/getResponderList'
 import ResponderCrud from '../src/components/ResponderCrud'
-import { Responder, ItemType } from '@prisma/client'
+import { Responder, ItemType, ItemTypeGroup } from '@prisma/client'
 import ItemTypeCrud from '../src/components/ItemTypeCrud'
 import getItemTypeList from '../src/services/itemType/getItemTypeList'
 import { Tab, Tabs } from '@mui/material'
 import { Box } from '@mui/system'
 import { GetServerSideProps } from 'next'
+import { SingleSelectOption } from '../src/components/CrudDataGrid'
+import getItemTypeGroupList from '../src/services/itemTypeGroup/getItemTypeGroupList'
 
 /**
  * This method loads the data to be used when the page is first loaded up
@@ -21,10 +23,22 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const responderRows = JSON.parse(JSON.stringify(responders))
   const itemTypes = await getItemTypeList()
   const itemTypeRows = JSON.parse(JSON.stringify(itemTypes))
+  const itemTypeGroupList = JSON.parse(
+    JSON.stringify(await getItemTypeGroupList())
+  )
+  const itemTypeGroupValues: SingleSelectOption[] = itemTypeGroupList.map(
+    (group) => ({
+      value: group.id,
+      label: group.name,
+    })
+  )
+  itemTypeGroupValues.push({ value: null, label: ' - ' })
   return {
     props: {
       responderRows: responderRows,
       itemTypeRows: itemTypeRows,
+      itemTypeGroupList: itemTypeGroupList,
+      itemTypeGroupValues: itemTypeGroupValues,
     },
   }
 }
@@ -32,6 +46,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 interface HomeProps {
   responderRows: Responder[]
   itemTypeRows: ItemType[]
+  itemTypeGroupList: ItemTypeGroup[]
+  itemTypeGroupValues: SingleSelectOption[]
 }
 
 function a11yProps(index: number) {
@@ -92,7 +108,11 @@ export default function Home(props: HomeProps) {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <h1>Item Types</h1>
-          <ItemTypeCrud rows={props.itemTypeRows} />
+          <ItemTypeCrud
+            rows={props.itemTypeRows}
+            itemTypeGroupList={props.itemTypeGroupList}
+            itemTypeGroupValues={props.itemTypeGroupValues}
+          />
         </TabPanel>
       </main>
     </>

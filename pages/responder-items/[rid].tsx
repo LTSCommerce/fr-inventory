@@ -8,9 +8,7 @@ import getResponderItemList from '../../src/services/responderItem/getResponderI
 import ResponderItemCrud from '../../src/components/ResponderItemCrud'
 import { GetServerSideProps } from 'next'
 import getItemTypeList from '../../src/services/itemType/getItemTypeList'
-
-export type ItemTypeValue = { value: number; label: string }
-export type ItemTypeValues = ItemTypeValue[]
+import { SingleSelectOption } from '../../src/components/CrudDataGrid'
 
 /**
  * This method loads the data to be used when the page is first loaded up
@@ -27,7 +25,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const itemTypeList = await getItemTypeList()
 
-  const itemTypeValues: ItemTypeValues = itemTypeList.map((itemType) => ({
+  const itemTypeValues: SingleSelectOption[] = itemTypeList.map((itemType) => ({
     value: itemType.id,
     label: itemType.name,
   }))
@@ -49,7 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 interface ResponderItemProps {
   currentResponder: Responder
   itemTypeList: ItemType[]
-  itemTypeValues: ItemTypeValues
+  itemTypeValues: SingleSelectOption[]
   responderItems: ResponderItem[]
 }
 

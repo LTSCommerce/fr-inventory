@@ -4,18 +4,21 @@ import * as React from 'react'
  * Our custom services to load or persist data
  */
 import { ItemTypeUpdate } from '../services/itemType/updateItemType'
-import { ItemType } from '@prisma/client'
+import { ItemType, ItemTypeGroup } from '@prisma/client'
 import { deleteItemTypeApi, updateItemTypeApi } from '../api-client/itemType'
 
-import {  GridColumns } from '@mui/x-data-grid'
+import { GridColumns } from '@mui/x-data-grid'
 import CrudDataGrid, {
   CreateEntityFn,
   DeleteEntityFn,
+  SingleSelectOption,
   UpdateEntityFn,
 } from './CrudDataGrid'
 
 interface ItemTypeCrudProps {
   rows: ItemType[]
+  itemTypeGroupList: ItemTypeGroup[]
+  itemTypeGroupValues: SingleSelectOption[]
 }
 
 export default function ResponderCrud(props: ItemTypeCrudProps) {
@@ -42,6 +45,30 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
       minWidth: 30,
     },
     {
+      field: 'hasSerialNumber',
+      headerName: 'Has Serial?',
+      editable: true,
+      type: 'boolean',
+      flex: 1,
+      minWidth: 30,
+    },
+    {
+      field: 'hasSwasft',
+      headerName: 'Has SWASFT?',
+      editable: true,
+      type: 'boolean',
+      flex: 1,
+      minWidth: 30,
+    },
+    {
+      field: 'hasModel',
+      headerName: 'Has Model?',
+      editable: true,
+      type: 'boolean',
+      flex: 1,
+      minWidth: 30,
+    },
+    {
       field: 'hasBattery',
       headerName: 'Has Battery?',
       editable: true,
@@ -56,6 +83,30 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
       type: 'nummber',
       flex: 1,
       minWidth: 50,
+    },
+    {
+      field: 'infoUrl',
+      headerName: 'Info URL',
+      editable: true,
+      type: 'string',
+      renderCell: (params) =>
+        params.row.infoUrl ? <a href="${params.row.infoUrl}">info</a> : '',
+    },
+    {
+      field: 'itemTypeGroupId',
+      headerName: 'Group',
+      editable: true,
+      type: 'singleSelect',
+      valueOptions: props.itemTypeGroupValues,
+      valueGetter: ({ value, colDef }) => {
+        if (colDef.valueOptions === undefined) {
+          throw new Error('Undefind value options')
+        }
+        const option = colDef.valueOptions.find(
+          ({ value: optionValue }) => value === optionValue
+        )
+        return option.label || ' err: not set'
+      },
     },
     {
       field: 'createdAt',
@@ -80,6 +131,11 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
       hasBattery: false,
       hasExpiryDate: false,
       minimum: 1,
+      hasModel: false,
+      hasSerialNumber: false,
+      hasSwasft: false,
+      infoUrl: null,
+      itemTypeGroupId: null,
     })
   }
 
@@ -90,6 +146,11 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
       hasBattery: updatedRow.hasBattery,
       hasExpiryDate: updatedRow.hasExpiryDate,
       minimum: updatedRow.minmum,
+      hasModel: updatedRow.hasModel,
+      hasSerialNumber: updatedRow.hasSerialNumber,
+      hasSwasft: updatedRow.hasSwasft,
+      infoUrl: updatedRow.infoUrl,
+      itemTypeGroupId: updatedRow.itemTypeGroupId,
     }
     // Make the HTTP request to save in the backend
     return await updateItemTypeApi(updateData)
@@ -98,7 +159,7 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
   const deleteEntityFn: DeleteEntityFn = (id) => {
     deleteItemTypeApi(id)
   }
-  
+
   return (
     <CrudDataGrid
       rows={props.rows}

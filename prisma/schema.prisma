@@ -12,36 +12,54 @@ datasource db {
 
 // The archetype for an item. Describes the nature of the item
 model ItemType {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name String
-  hasExpiryDate Boolean @default(false)
-  // required = 1, required multiple=min, not required =0
-  minimum Int @default(1)
-  hasBattery Boolean @default(false)
-  items ResponderItem[]
+  id              Int             @id @default(autoincrement())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  name            String
+  hasExpiryDate   Boolean         @default(false)
+  hasSerialNumber Boolean         @default(false)
+  hasSwasft       Boolean         @default(false)
+  hasModel        Boolean         @default(false)
+  minimum         Int             @default(1) // required = 1, required multiple=min, not required =0
+  hasBattery      Boolean         @default(false)
+  infoUrl         String?
+  items           ResponderItem[]
+  itemTypeGroup   ItemTypeGroup?  @relation(fields: [itemTypeGroupId], references: [id])
+  itemTypeGroupId Int?
+}
+
+model ItemTypeGroup {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  ItemType  ItemType[]
+  notes     String?    @db.Text
 }
 
 // A responder is a person/group who responds to a callsign and owns items
 model Responder {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name String
-  callsign String
-  items ResponderItem[]
+  id        Int             @id @default(autoincrement())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  name      String
+  callsign  String
+  items     ResponderItem[]
 }
 
 // A responder item is one or more of specific ItemType held by a Responder
 model ResponderItem {
-  id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  itemType ItemType @relation(fields:[itemTypeId], references:[id])
-  itemTypeId Int
-  responder Responder @relation(fields:[responderId], references:[id])
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  itemType    ItemType  @relation(fields: [itemTypeId], references: [id])
+  itemTypeId  Int
+  responder   Responder @relation(fields: [responderId], references: [id])
   responderId Int
-  expiry DateTime? // nullable expiry date
-  quantity Int @default(0)
+  expiry      DateTime? // nullable expiry date
+  serial      String?
+  model       String?
+  swasft      String?
+  quantity    Int       @default(0)
+  notes       String?   @db.Text
 }

@@ -9,12 +9,12 @@ import {
   deleteResponderItemApi,
   updateResponderItemApi,
 } from '../api-client/responderItem'
-import { ItemTypeValues } from '../../pages/responder-items/[rid]'
 
 import { GridColumns } from '@mui/x-data-grid'
 import CrudDataGrid, {
   CreateEntityFn,
   DeleteEntityFn,
+  SingleSelectOption,
   UpdateEntityFn,
 } from './CrudDataGrid'
 
@@ -22,7 +22,7 @@ interface ResponderItemCrudProps {
   currentResponder: Responder
   rows: ResponderItem[]
   itemTypeList: ItemType[]
-  itemTypeValues: ItemTypeValues
+  itemTypeValues: SingleSelectOption[]
 }
 
 export default function ResponderCrud(props: ResponderItemCrudProps) {

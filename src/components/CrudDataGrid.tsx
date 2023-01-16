@@ -62,6 +62,9 @@ export type DeleteEntityFn = (id: GridRowId) => void
 // a method that will create any extra grid actions that are required
 export type ExtraActionsFactory = (id: GridRowId) => GridActionsCellItem[]
 
+// a select option, an array of which is used for singleSelect columns
+export type SingleSelectOption = { value: number | null; label: string }
+
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void
   setRowModesModel: (
