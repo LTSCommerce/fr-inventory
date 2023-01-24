@@ -14,6 +14,7 @@ import { GridColumns } from '@mui/x-data-grid'
 import CrudDataGrid, {
   CreateEntityFn,
   DeleteEntityFn,
+  formatDate,
   SingleSelectOption,
   UpdateEntityFn,
 } from './CrudDataGrid'
@@ -58,6 +59,7 @@ export default function ResponderCrud(props: ResponderItemCrudProps) {
     {
       field: 'quantity',
       headerName: 'Quantity',
+      minWidth: 100,
       type: 'number',
       editable: true,
     },
@@ -65,8 +67,9 @@ export default function ResponderCrud(props: ResponderItemCrudProps) {
       field: 'expiry',
       headerName: 'Expiry',
       editable: true,
+      minWidth: 100,
       type: 'date',
-      valueFormatter: (params) => new Date(params?.value),
+      valueFormatter: formatDate,
     },
   ]
 

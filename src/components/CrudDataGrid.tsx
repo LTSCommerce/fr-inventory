@@ -105,25 +105,26 @@ interface CrudProps {
   extraActions?: ExtraActionsFactory
 }
 
+// value formatter function for date columns
+export const formatDate = (params: GridValueFormatterParams): string => {
+  const dateString = params?.value
+  if (null === dateString) {
+    return '-'
+  }
+  const date = new Date(dateString)
+  const today = new Date()
+  if (date.getDate() === today.getDate()) {
+    return date.toLocaleTimeString()
+  }
+  return date.toLocaleDateString()
+}
+
 export default function CrudDataGrid(props: CrudProps) {
   const [rows, setRows] = React.useState(props.rows)
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   )
   const [pageSize, setPageSize] = React.useState(10)
-
-  const formatDate = (params: GridValueFormatterParams): string => {
-    const dateString = params?.value
-    if (null === dateString) {
-      return '-'
-    }
-    const date = new Date(dateString)
-    const today = new Date()
-    if (date.getDate() === today.getDate()) {
-      return date.toLocaleTimeString()
-    }
-    return date.toLocaleDateString()
-  }
 
   //merge the passed in field columns with the standard edit columns
   let columns: GridColumns = [
@@ -278,6 +279,7 @@ export default function CrudDataGrid(props: CrudProps) {
         rows={rows}
         rowModesModel={rowModesModel}
         columns={columns}
+        disableColumnMenu={true}
         autoHeight={true}
         //pagesize stuff
         pageSize={pageSize}

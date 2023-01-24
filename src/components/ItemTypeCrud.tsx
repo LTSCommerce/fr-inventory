@@ -38,7 +38,8 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
     },
     {
       field: 'hasExpiryDate',
-      headerName: 'Has Expiry Date?',
+      headerName: 'Expiry Date?',
+      description: 'Has Expiry Date?',
       editable: true,
       type: 'boolean',
       flex: 1,
@@ -46,7 +47,8 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
     },
     {
       field: 'hasSerialNumber',
-      headerName: 'Has Serial?',
+      headerName: 'Serial?',
+      description: 'Has Serial?',
       editable: true,
       type: 'boolean',
       flex: 1,
@@ -54,7 +56,8 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
     },
     {
       field: 'hasSwasft',
-      headerName: 'Has SWASFT?',
+      headerName: 'SWASFT?',
+      description: 'Has SWASFT?',
       editable: true,
       type: 'boolean',
       flex: 1,
@@ -62,7 +65,8 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
     },
     {
       field: 'hasModel',
-      headerName: 'Has Model?',
+      headerName: 'Model?',
+      description: 'Has Model?',
       editable: true,
       type: 'boolean',
       flex: 1,
@@ -70,7 +74,8 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
     },
     {
       field: 'hasBattery',
-      headerName: 'Has Battery?',
+      headerName: 'Battery?',
+      description: 'Has Battery?',
       editable: true,
       type: 'boolean',
       flex: 1,
@@ -108,7 +113,6 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
         return option.label || ' err: not set'
       },
     },
-    
   ]
 
   const createEntityFn: CreateEntityFn = async () => {
