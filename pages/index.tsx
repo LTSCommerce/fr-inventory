@@ -13,6 +13,7 @@ import { Box } from '@mui/system'
 import { GetServerSideProps } from 'next'
 import { SingleSelectOption } from '../src/components/CrudDataGrid'
 import getItemTypeGroupList from '../src/services/itemTypeGroup/getItemTypeGroupList'
+import ItemTypeGroupCrud from '../src/components/ItemTypeGroupCrud'
 
 /**
  * This method loads the data to be used when the page is first loaded up
@@ -27,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     JSON.stringify(await getItemTypeGroupList())
   )
   const itemTypeGroupValues: SingleSelectOption[] = itemTypeGroupList.map(
-    (group) => ({
+    (group: ItemTypeGroup) => ({
       value: group.id,
       label: group.name,
     })
@@ -37,6 +38,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: {
       responderRows: responderRows,
       itemTypeRows: itemTypeRows,
+      itemTypeGroupRows: itemTypeGroupList,
       itemTypeGroupList: itemTypeGroupList,
       itemTypeGroupValues: itemTypeGroupValues,
     },
@@ -46,6 +48,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 interface HomeProps {
   responderRows: Responder[]
   itemTypeRows: ItemType[]
+  itemTypeGroupRows: ItemTypeGroup[]
   itemTypeGroupList: ItemTypeGroup[]
   itemTypeGroupValues: SingleSelectOption[]
 }
@@ -97,6 +100,7 @@ export default function Home(props: HomeProps) {
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Responders" {...a11yProps(0)} />
           <Tab label="Item Types" {...a11yProps(1)} />
+          <Tab label="Item Type Groups" {...a11yProps(2)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <div style={{ display: 'flex', height: '100%' }}>
@@ -113,6 +117,10 @@ export default function Home(props: HomeProps) {
             itemTypeGroupList={props.itemTypeGroupList}
             itemTypeGroupValues={props.itemTypeGroupValues}
           />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <h1>Item Type Groups</h1>
+          <ItemTypeGroupCrud rows={props.itemTypeGroupRows} />
         </TabPanel>
       </main>
     </>

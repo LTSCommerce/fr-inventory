@@ -35,12 +35,6 @@ export default function ResponderCrud(props: ResponderItemCrudProps) {
   )
   const fieldColumns: GridColumns = [
     {
-      field: 'id',
-      headerName: 'ID',
-      editable: false,
-      width: 90,
-    },
-    {
       field: 'itemTypeId',
       headerName: 'Item',
       type: 'singleSelect',

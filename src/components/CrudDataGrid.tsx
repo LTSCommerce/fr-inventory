@@ -27,7 +27,12 @@ import SaveIcon from '@mui/icons-material/Save'
 import CancelIcon from '@mui/icons-material/Close'
 import Snackbar from '@mui/material/Snackbar'
 import Alert, { AlertProps } from '@mui/material/Alert'
-import { ItemType, Responder, ResponderItem } from '@prisma/client'
+import {
+  ItemType,
+  ItemTypeGroup,
+  Responder,
+  ResponderItem,
+} from '@prisma/client'
 import {
   ResponderInsert,
   ResponderUpdate,
@@ -40,17 +45,23 @@ import {
   ItemTypeInsert,
   ItemTypeUpdate,
 } from '../services/itemType/updateItemType'
+import {
+  ItemTypeGroupInsert,
+  ItemTypeGroupUpdate,
+} from '../services/itemTypeGroup/updateItemTypeGroup'
 
 // a single type to account for any of our entities managed with Prisma
 // do wonder if there is a better way to do this?
-export type Entity = Responder | ItemType | ResponderItem
+export type Entity = Responder | ItemType | ItemTypeGroup | ResponderItem
 export type EntityUpdate =
   | ResponderUpdate
   | ItemTypeUpdate
+  | ItemTypeGroupUpdate
   | ResponderItemUpdate
 export type EntityInsert =
   | ResponderInsert
   | ItemTypeInsert
+  | ItemTypeGroupInsert
   | ResponderItemInsert
 
 // processing row update include making the API calls
@@ -119,7 +130,7 @@ export const formatDate = (params: GridValueFormatterParams): string => {
   return date.toLocaleDateString()
 }
 
-export const selectValueFormatter=(params: GridValueFormatterParams) => {
+export const selectValueFormatter = (params: GridValueFormatterParams) => {
   const colDef = params.api.getColumn(params.field)
   const option = colDef.valueOptions.find(
     ({ value: optionValue }) => params.value === optionValue
@@ -137,6 +148,12 @@ export default function CrudDataGrid(props: CrudProps) {
 
   //merge the passed in field columns with the standard edit columns
   let columns: GridColumns = [
+    {
+      field: 'id',
+      headerName: 'ID',
+      editable: false,
+      width: 90,
+    },
     ...props.fieldColumns,
     {
       field: 'createdAt',
