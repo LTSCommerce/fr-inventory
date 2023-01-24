@@ -15,6 +15,7 @@ import CrudDataGrid, {
   CreateEntityFn,
   DeleteEntityFn,
   formatDate,
+  selectValueFormatter,
   SingleSelectOption,
   UpdateEntityFn,
 } from './CrudDataGrid'
@@ -44,15 +45,7 @@ export default function ResponderCrud(props: ResponderItemCrudProps) {
       headerName: 'Item',
       type: 'singleSelect',
       valueOptions: itemTypeValues,
-      valueGetter: ({ value, colDef }) => {
-        if (colDef.valueOptions === undefined) {
-          throw new Error('Undefind value options')
-        }
-        const option = colDef.valueOptions.find(
-          ({ value: optionValue }) => value === optionValue
-        )
-        return option.label
-      },
+      valueFormatter: selectValueFormatter,
       width: 200,
       editable: true,
     },

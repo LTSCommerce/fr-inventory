@@ -119,6 +119,15 @@ export const formatDate = (params: GridValueFormatterParams): string => {
   return date.toLocaleDateString()
 }
 
+export const selectValueFormatter=(params: GridValueFormatterParams) => {
+  const colDef = params.api.getColumn(params.field)
+  const option = colDef.valueOptions.find(
+    ({ value: optionValue }) => params.value === optionValue
+  )
+
+  return option.label
+}
+
 export default function CrudDataGrid(props: CrudProps) {
   const [rows, setRows] = React.useState(props.rows)
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(

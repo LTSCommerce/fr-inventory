@@ -11,6 +11,7 @@ import { GridColumns } from '@mui/x-data-grid'
 import CrudDataGrid, {
   CreateEntityFn,
   DeleteEntityFn,
+  selectValueFormatter,
   SingleSelectOption,
   UpdateEntityFn,
 } from './CrudDataGrid'
@@ -103,15 +104,7 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
       editable: true,
       type: 'singleSelect',
       valueOptions: props.itemTypeGroupValues,
-      valueGetter: ({ value, colDef }) => {
-        if (colDef.valueOptions === undefined) {
-          throw new Error('Undefind value options')
-        }
-        const option = colDef.valueOptions.find(
-          ({ value: optionValue }) => value === optionValue
-        )
-        return option.label || ' err: not set'
-      },
+      valueFormatter: selectValueFormatter,
     },
   ]
 

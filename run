@@ -180,6 +180,10 @@ case "$arg" in
         echo "Run Dev Server with Debugging for local development and debugging"
         composeRunBackendWithPorts 9229 9230 3000 node --inspect-brk=0.0.0.0:9229 ./node_modules/.bin/next dev
         ;;
+    l|lint)
+        echo "Lint and Fix"
+        composeRunBackend yarn next lint --fix
+        ;;
     t|test)
         echo "Run Jest Tests"
         composeRunBackend yarn jest --max-workers $(numberOfWorkers)
