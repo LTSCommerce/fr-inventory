@@ -27,8 +27,8 @@ interface ResponderItemCrudProps {
 
 export default function ResponderCrud(props: ResponderItemCrudProps) {
   const currentResponder: Responder = props.currentResponder
-  const [itemTypeList, setItemTypeList] = React.useState(props.itemTypeList)
-  const [itemTypeValues, setItemTypeValues] = React.useState(
+  const [itemTypeList /*setItemTypeList*/] = React.useState(props.itemTypeList)
+  const [itemTypeValues /*setItemTypeValues*/] = React.useState(
     props.itemTypeValues
   )
   const fieldColumns: GridColumns = [
@@ -65,22 +65,6 @@ export default function ResponderCrud(props: ResponderItemCrudProps) {
       field: 'expiry',
       headerName: 'Expiry',
       editable: true,
-      type: 'date',
-      valueFormatter: (params) => new Date(params?.value),
-    },
-    {
-      field: 'createdAt',
-      headerName: 'Created',
-      width: 150,
-      editable: false,
-      type: 'date',
-      valueFormatter: (params) => new Date(params?.value),
-    },
-    {
-      field: 'updatedAt',
-      headerName: 'Updated',
-      width: 150,
-      editable: false,
       type: 'date',
       valueFormatter: (params) => new Date(params?.value),
     },

@@ -16,6 +16,8 @@ import {
   MuiEvent,
   GridRowId,
   GridEventListener,
+  GridColDef,
+  GridValueFormatterParams,
 } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
@@ -110,8 +112,36 @@ export default function CrudDataGrid(props: CrudProps) {
   )
   const [pageSize, setPageSize] = React.useState(10)
 
-  const columns: GridColumns = [
+  const formatDate = (params: GridValueFormatterParams): string => {
+    const dateString = params?.value
+    if (null === dateString) {
+      return '-'
+    }
+    const date = new Date(dateString)
+    const today = new Date()
+    if (date.getDate() === today.getDate()) {
+      return date.toLocaleTimeString()
+    }
+    return date.toLocaleDateString()
+  }
+
+  //merge the passed in field columns with the standard edit columns
+  let columns: GridColumns = [
     ...props.fieldColumns,
+    {
+      field: 'createdAt',
+      headerName: 'Created',
+      width: 100,
+      editable: false,
+      valueFormatter: formatDate,
+    },
+    {
+      field: 'updatedAt',
+      headerName: 'Updated',
+      width: 100,
+      editable: false,
+      valueFormatter: formatDate,
+    },
     {
       field: 'actions',
       type: 'actions',
@@ -166,6 +196,13 @@ export default function CrudDataGrid(props: CrudProps) {
       },
     },
   ]
+
+  // ensure columns all have description set
+  columns = columns.map((column: GridColDef) => ({
+    ...column,
+    description: column.description ? column.description : column.headerName,
+    width: column.width ? column.width : 30,
+  }))
 
   const [snackbar, setSnackbar] = React.useState<Pick<
     AlertProps,
@@ -226,7 +263,7 @@ export default function CrudDataGrid(props: CrudProps) {
 
       return response
     },
-    []
+    [props]
   )
 
   const handleProcessRowUpdateError = React.useCallback((error: Error) => {

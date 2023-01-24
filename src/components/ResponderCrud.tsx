@@ -43,20 +43,6 @@ export default function ResponderCrud(props: ResponderCrudProps) {
       flex: 1,
       minWidth: 150,
     },
-    {
-      field: 'createdAt',
-      headerName: 'Created',
-      width: 150,
-      editable: false,
-      valueFormatter: (params) => new Date(params?.value),
-    },
-    {
-      field: 'updatedAt',
-      headerName: 'Updated',
-      width: 150,
-      editable: false,
-      valueFormatter: (params) => new Date(params?.value),
-    },
   ]
 
   const extraActions = (id: GridRowId) => {

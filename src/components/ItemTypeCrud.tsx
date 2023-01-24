@@ -108,20 +108,7 @@ export default function ResponderCrud(props: ItemTypeCrudProps) {
         return option.label || ' err: not set'
       },
     },
-    {
-      field: 'createdAt',
-      headerName: 'Created',
-      width: 150,
-      editable: false,
-      valueFormatter: (params) => new Date(params?.value),
-    },
-    {
-      field: 'updatedAt',
-      headerName: 'Updated',
-      width: 150,
-      editable: false,
-      valueFormatter: (params) => new Date(params?.value),
-    },
+    
   ]
 
   const createEntityFn: CreateEntityFn = async () => {
