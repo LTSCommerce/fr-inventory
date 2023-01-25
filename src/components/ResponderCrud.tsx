@@ -13,6 +13,7 @@ import { GridActionsCellItem, GridColumns, GridRowId } from '@mui/x-data-grid'
 import CrudDataGrid, {
   CreateEntityFn,
   DeleteEntityFn,
+  ExtraActionsFactory,
   UpdateEntityFn,
 } from './CrudDataGrid'
 
@@ -23,7 +24,7 @@ interface ResponderCrudProps {
 export default function ResponderCrud(props: ResponderCrudProps) {
   const router = useRouter()
   const fieldColumns: GridColumns = [
-       {
+    {
       field: 'name',
       headerName: 'Name',
       editable: true,
@@ -39,7 +40,7 @@ export default function ResponderCrud(props: ResponderCrudProps) {
     },
   ]
 
-  const extraActions = (id: GridRowId) => {
+  const extraActions: ExtraActionsFactory = (id: GridRowId) => {
     return [
       <GridActionsCellItem
         key="viewItemsAction"

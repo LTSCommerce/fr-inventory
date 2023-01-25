@@ -19,6 +19,14 @@ Everything is being done in containers.
 
 To make this easier, commands have been coded into the [./run](./run) script. If you run it without arguments you can see the help
 
+### Run Production Server
+
+To run a production server, use this command:
+
+```bash
+run prod
+```
+
 ### Run Development Server
 
 To get the system running in development mode, use this command:

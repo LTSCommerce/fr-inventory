@@ -208,6 +208,10 @@ case "$arg" in
         echo "Run node command"
         composeRunBackend node ${@:2}
         ;;
+    prod|production)
+        echo "Build and Run Production Server"
+        composeRunBackend yarn next build && composeRunBackendWithPort 3000 yarn next start
+        ;;
     *)
         echo "Help"
         echo

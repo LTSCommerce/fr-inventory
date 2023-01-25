@@ -73,7 +73,9 @@ export type UpdateEntityFn = (updatedRow: GridRowModel) => Promise<Entity>
 export type DeleteEntityFn = (id: GridRowId) => void
 
 // a method that will create any extra grid actions that are required
-export type ExtraActionsFactory = (id: GridRowId) => GridActionsCellItem[]
+export type ExtraActionsFactory = (
+  id: GridRowId
+) => JSX.Element[]
 
 // a select option, an array of which is used for singleSelect columns
 export type SingleSelectOption = { value: number | null; label: string }
@@ -133,7 +135,7 @@ export const formatDate = (params: GridValueFormatterParams): string => {
 export const selectValueFormatter = (params: GridValueFormatterParams) => {
   const colDef = params.api.getColumn(params.field)
   const option = colDef.valueOptions.find(
-    ({ value: optionValue }) => params.value === optionValue
+    ({ value: optionValue }: { value: string }) => params.value === optionValue
   )
 
   return option.label

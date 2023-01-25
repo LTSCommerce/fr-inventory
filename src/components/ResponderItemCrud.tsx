@@ -67,6 +67,10 @@ export default function ResponderCrud(props: ResponderItemCrudProps) {
       responderId: currentResponder.id,
       expiry: itemTypeList[0].hasExpiryDate ? new Date() : null,
       quantity: 0,
+      model: '',
+      notes: '',
+      serial: '',
+      swasft: '',
     })
   }
   const updateEntityFn: UpdateEntityFn = async (updatedRow) => {
@@ -76,6 +80,10 @@ export default function ResponderCrud(props: ResponderItemCrudProps) {
       itemTypeId: updatedRow.itemTypeId,
       responderId: currentResponder.id,
       quantity: updatedRow.quantity,
+      model: updatedRow.model,
+      notes: updatedRow.notes,
+      serial: updatedRow.serial,
+      swasft: updatedRow.swasft,
     }
     // Make the HTTP request to save in the backend
     return await updateResponderItemApi(updateData)
