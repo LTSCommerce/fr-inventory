@@ -119,6 +119,8 @@ case "$arg" in
         if [[ ! -f .env ]]; then
           cp .env-dist .env;
         fi
+        git pull
+        clearEverything
         $thisScriptName up \
           && $thisScriptName install \
           && $thisScriptName generate \
