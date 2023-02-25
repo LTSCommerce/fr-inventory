@@ -14,6 +14,7 @@ import { GetServerSideProps } from 'next'
 import { SingleSelectOption } from '../src/components/CrudDataGrid'
 import getItemTypeGroupList from '../src/services/itemTypeGroup/getItemTypeGroupList'
 import ItemTypeGroupCrud from '../src/components/ItemTypeGroupCrud'
+import SummaryTable, { SummaryData, SummaryDummyRows } from '../src/components/SummaryTable'
 
 /**
  * This method loads the data to be used when the page is first loaded up
@@ -41,6 +42,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       itemTypeGroupRows: itemTypeGroupList,
       itemTypeGroupList: itemTypeGroupList,
       itemTypeGroupValues: itemTypeGroupValues,
+      summaryRows: SummaryDummyRows
     },
   }
 }
@@ -51,6 +53,7 @@ interface HomeProps {
   itemTypeGroupRows: ItemTypeGroup[]
   itemTypeGroupList: ItemTypeGroup[]
   itemTypeGroupValues: SingleSelectOption[]
+  summaryRows: SummaryData[]
 }
 
 function a11yProps(index: number) {
@@ -101,6 +104,7 @@ export default function Home(props: HomeProps) {
           <Tab label="Responders" {...a11yProps(0)} />
           <Tab label="Item Types" {...a11yProps(1)} />
           <Tab label="Item Type Groups" {...a11yProps(2)} />
+          <Tab label="Detailed Summary" {...a11yProps(3)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <div style={{ display: 'flex', height: '100%' }}>
@@ -121,6 +125,10 @@ export default function Home(props: HomeProps) {
         <TabPanel value={value} index={2}>
           <h1>Item Type Groups</h1>
           <ItemTypeGroupCrud rows={props.itemTypeGroupRows} />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <h1>Detailed Summary</h1>
+          <SummaryTable rows={props.summaryRows} />
         </TabPanel>
       </main>
     </>
